@@ -1,0 +1,33 @@
+---
+import { giscusConfig } from "../../config";
+
+interface Props {
+	class?: string;
+}
+
+const className = Astro.props.class;
+
+// The comment section is only rendered when the repository/category IDs are configured.
+// See https://giscus.app to obtain them, then fill them in src/config.ts (giscusConfig).
+const enabled =
+	giscusConfig.enable &&
+	giscusConfig.repoId.trim() !== "" &&
+	giscusConfig.categoryId.trim() !== "";
+---
+
+{enabled && (
+	<div
+		id="comments"
+		class:list={[
+			className,
+			"card-base rounded-[var(--radius-large)] px-6 md:px-9 py-6 relative w-full transition",
+		]}
+	>
+		<h2 class="font-bold text-2xl mb-4 text-black/90 dark:text-white/90 onload-animation">
+			Comments
+		</h2>
+		<!-- The iframe is injected by the script in Layout.astro (renderGiscus),
+		     which also re-renders it on every Swup page transition. -->
+		<div class="giscus"></div>
+	</div>
+)}

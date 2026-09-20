@@ -1,5 +1,6 @@
 import type {
 	ExpressiveCodeConfig,
+	GiscusConfig,
 	LicenseConfig,
 	NavBarConfig,
 	ProfileConfig,
@@ -8,8 +9,8 @@ import type {
 import { LinkPreset } from "./types/config";
 
 export const siteConfig: SiteConfig = {
-	title: "Fuwari",
-	subtitle: "Demo Site",
+	title: "Mengqy's Blog",
+	subtitle: "Personal Blog",
 	lang: "en", // Language code, e.g. 'en', 'zh_CN', 'ja', etc.
 	themeColor: {
 		hue: 250, // Default hue for the theme color, from 0 to 360. e.g. red: 0, teal: 200, cyan: 250, pink: 345
@@ -46,33 +47,23 @@ export const navBarConfig: NavBarConfig = {
 		LinkPreset.About,
 		{
 			name: "GitHub",
-			url: "https://github.com/saicaca/fuwari", // Internal links should not include the base path, as it is automatically added
+			url: "https://github.com/mengqy2022", // Internal links should not include the base path, as it is automatically added
 			external: true, // Show an external link icon and will open in a new tab
 		},
 	],
 };
 
 export const profileConfig: ProfileConfig = {
-	avatar: "assets/images/demo-avatar.png", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
-	name: "Lorem Ipsum",
-	bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+	avatar: "https://github.com/mengqy2022.png", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
+	name: "Mengqy",
+	bio: "记录学习与生活的个人博客",
 	links: [
 		{
-			name: "Twitter",
-			icon: "fa6-brands:twitter", // Visit https://icones.js.org/ for icon codes
+			name: "GitHub",
+			icon: "fa6-brands:github", // Visit https://icones.js.org/ for icon codes
 			// You will need to install the corresponding icon set if it's not already included
 			// `pnpm add @iconify-json/<icon-set-name>`
-			url: "https://twitter.com",
-		},
-		{
-			name: "Steam",
-			icon: "fa6-brands:steam",
-			url: "https://store.steampowered.com",
-		},
-		{
-			name: "GitHub",
-			icon: "fa6-brands:github",
-			url: "https://github.com/saicaca/fuwari",
+			url: "https://github.com/mengqy2022",
 		},
 	],
 };
@@ -87,4 +78,24 @@ export const expressiveCodeConfig: ExpressiveCodeConfig = {
 	// Note: Some styles (such as background color) are being overridden, see the astro.config.mjs file.
 	// Please select a dark theme, as this blog theme currently only supports dark background color
 	theme: "github-dark",
+};
+
+export const giscusConfig: GiscusConfig = {
+	enable: true,
+	// Your GitHub repository. It must be PUBLIC and have the Discussions feature enabled,
+	// and the Giscus app (https://github.com/apps/giscus) must be installed on it.
+	repo: "mengqy2022/Blog-mqy",
+	// !!! IMPORTANT !!!
+	// repoId and categoryId are NOT your GitHub username/numbers.
+	// Get them from https://giscus.app -> enter your repository -> copy the values
+	// shown in the generated "data-repo-id" and "data-category-id" attributes.
+	// The comment section is hidden until both are filled in.
+	repoId: "",
+	category: "Announcements", // The Discussions category used for comments (must exist in your repo)
+	categoryId: "",
+	mapping: "pathname", // How to map a page to a discussion: 'pathname' | 'url' | 'title' | 'og:title'
+	reactionsEnabled: true, // Allow emoji reactions on comments
+	inputPosition: "bottom", // Position of the comment input box: 'top' | 'bottom'
+	lang: "en", // UI language of the comment widget, e.g. 'en', 'zh-CN'
+	theme: "light", // Base theme; it is automatically synced with the site's light/dark mode
 };

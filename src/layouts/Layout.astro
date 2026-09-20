@@ -210,7 +210,7 @@ import {
 	BANNER_HEIGHT_EXTEND,
 	MAIN_PANEL_OVERLAPS_BANNER_HEIGHT
 } from "../constants/constants";
-import { siteConfig } from '../config';
+import { giscusConfig, siteConfig } from '../config';
 
 /* Preload fonts */
 // (async function() {
@@ -363,6 +363,46 @@ function showBanner() {
 	banner.classList.remove('opacity-0', 'scale-105');
 }
 
+/* ---- Giscus comments ---- */
+function giscusTheme(): string {
+	return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+}
+
+function renderGiscus() {
+	if (!giscusConfig.enable || !giscusConfig.repoId || !giscusConfig.categoryId) {
+		return;
+	}
+	const container = document.querySelector<HTMLElement>('.giscus');
+	if (!container || container.dataset.giscusReady === 'true') return;
+	container.dataset.giscusReady = 'true';
+
+	const script = document.createElement('script');
+	script.src = 'https://giscus.app/client.js';
+	script.async = true;
+	script.crossOrigin = 'anonymous';
+	script.setAttribute('data-repo', giscusConfig.repo);
+	script.setAttribute('data-repo-id', giscusConfig.repoId);
+	script.setAttribute('data-category', giscusConfig.category);
+	script.setAttribute('data-category-id', giscusConfig.categoryId);
+	script.setAttribute('data-mapping', giscusConfig.mapping);
+	script.setAttribute('data-strict', '0');
+	script.setAttribute('data-reactions-enabled', giscusConfig.reactionsEnabled ? '1' : '0');
+	script.setAttribute('data-emit-metadata', '0');
+	script.setAttribute('data-input-position', giscusConfig.inputPosition);
+	script.setAttribute('data-theme', giscusTheme());
+	script.setAttribute('data-lang', giscusConfig.lang);
+	container.appendChild(script);
+}
+
+function syncGiscusTheme() {
+	const frame = document.querySelector<HTMLIFrameElement>('iframe.giscus-frame');
+	if (!frame) return;
+	frame.contentWindow?.postMessage(
+		{ giscus: { setConfig: { theme: giscusTheme() } } },
+		'https://giscus.app',
+	);
+}
+
 function init() {
 	// disableAnimation()()		// TODO
 	loadTheme();
@@ -405,6 +445,7 @@ const setup = () => {
 		}
 	})
 	window.swup.hooks.on('content:replace', initCustomScrollbar)
+	window.swup.hooks.on('page:view', renderGiscus)
 	window.swup.hooks.on('visit:start', (visit: {to: {url: string}}) => {
 		// change banner height immediately when a link is clicked
 		const bodyElement = document.querySelector('body')
@@ -453,6 +494,10 @@ if (window?.swup?.hooks) {
 } else {
 	document.addEventListener('swup:enable', setup)
 }
+
+/* Sync the Giscus comment theme with the site theme, and render comments on the initial page load */
+document.addEventListener('theme-change', syncGiscusTheme)
+renderGiscus()
 
 let backToTopBtn = document.getElementById('back-to-top-btn');
 let toc = document.getElementById('toc-wrapper');

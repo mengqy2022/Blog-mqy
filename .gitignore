@@ -1,6 +1,9 @@
 # build output
 dist/
 
+# pnpm local store (created when the global store is unavailable)
+.pnpm-store/
+
 # generated types
 .astro/
 

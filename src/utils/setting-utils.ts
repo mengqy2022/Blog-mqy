@@ -49,6 +49,9 @@ export function applyThemeToDocument(theme: LIGHT_DARK_MODE) {
 		"data-theme",
 		expressiveCodeConfig.theme,
 	);
+
+	// Notify listeners (e.g. the Giscus comment widget) that the theme changed
+	document.dispatchEvent(new CustomEvent("theme-change"));
 }
 
 export function setTheme(theme: LIGHT_DARK_MODE): void {
