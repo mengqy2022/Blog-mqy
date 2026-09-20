@@ -17,6 +17,13 @@ and **edit quantities** to track what you have left. Low-stock items (fewer on
 hand than the BOM needs for one board) are highlighted in red, and items that the
 BOM needs but that have not been purchased yet are highlighted in amber.
 
+:::warning[Personal tool — no backend]
+This is a **personal inventory tool**. There is **no server or backend**: every
+change you make here — edited quantities and uploaded files — is stored **only in
+your own browser** (localStorage) and is **never shared with other visitors**. To
+publish updates for everyone, regenerate the data and redeploy (see below).
+:::
+
 <div id="inventory-app"></div>
 
 ## How it works

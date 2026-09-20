@@ -258,10 +258,10 @@ function renderUpload(container: HTMLElement) {
         replaces the table for this session. To publish updates for all visitors, regenerate
         <code>inventory.json</code> with <code>scripts/build-inventory.mjs</code> and redeploy.
       </div>
-      <div class="flex flex-wrap gap-2">
-        <button id="inv-upload" class="btn-regular text-sm px-3 py-2 rounded-lg">Upload file…</button>
-        <button id="inv-export" class="btn-regular text-sm px-3 py-2 rounded-lg">Download CSV</button>
-        <a id="inv-example" href="${EXAMPLE_URL}" download class="btn-regular text-sm px-3 py-2 rounded-lg">Example format</a>
+      <div class="flex flex-wrap gap-3">
+        <button id="inv-upload" class="btn-regular no-styling text-sm px-4 py-2 rounded-lg whitespace-nowrap">Upload file…</button>
+        <button id="inv-export" class="btn-regular no-styling text-sm px-4 py-2 rounded-lg whitespace-nowrap">Download CSV</button>
+        <a id="inv-example" href="${EXAMPLE_URL}" download class="btn-regular no-styling text-sm px-4 py-2 rounded-lg whitespace-nowrap">Example format</a>
       </div>
       <input id="inv-file" type="file" accept=".csv,.xls,.xlsx" class="hidden">
       <div id="inv-msg" class="text-xs mt-2 opacity-70"></div>
