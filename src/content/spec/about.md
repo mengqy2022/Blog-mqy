@@ -7,3 +7,7 @@ notes, tutorials and stories. Feel free to look around, and if you have any
 questions or ideas, leave a comment under a post!
 
 - GitHub: [@mengqy2022](https://github.com/mengqy2022)
+
+This site is open source — the source code lives in the repository below:
+
+::github{repo="mengqy2022/Blog-mqy"}

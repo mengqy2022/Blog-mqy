@@ -365,7 +365,9 @@ function showBanner() {
 
 /* ---- Giscus comments ---- */
 function giscusTheme(): string {
-	return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+	// Use the theme configured in giscusConfig as-is (e.g. 'preferred_color_scheme'
+	// follows the OS color scheme, while 'light'/'dark' pin a fixed theme).
+	return giscusConfig.theme || 'light';
 }
 
 function renderGiscus() {

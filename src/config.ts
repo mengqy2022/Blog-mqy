@@ -54,9 +54,9 @@ export const navBarConfig: NavBarConfig = {
 };
 
 export const profileConfig: ProfileConfig = {
-	avatar: "https://github.com/mengqy2022.png", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
+	avatar: "assets/images/avatar.jpg", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
 	name: "Mengqy",
-	bio: "记录学习与生活的个人博客",
+	bio: "A personal blog recording my learning and daily life.",
 	links: [
 		{
 			name: "GitHub",
@@ -85,17 +85,15 @@ export const giscusConfig: GiscusConfig = {
 	// Your GitHub repository. It must be PUBLIC and have the Discussions feature enabled,
 	// and the Giscus app (https://github.com/apps/giscus) must be installed on it.
 	repo: "mengqy2022/Blog-mqy",
-	// !!! IMPORTANT !!!
-	// repoId and categoryId are NOT your GitHub username/numbers.
-	// Get them from https://giscus.app -> enter your repository -> copy the values
-	// shown in the generated "data-repo-id" and "data-category-id" attributes.
-	// The comment section is hidden until both are filled in.
-	repoId: "",
-	category: "Announcements", // The Discussions category used for comments (must exist in your repo)
-	categoryId: "",
+	// repoId and categoryId come from https://giscus.app (the "data-repo-id" and
+	// "data-category-id" values of the generated script). The comment section is
+	// hidden until both are filled in.
+	repoId: "R_kgDOUeaXXQ",
+	category: "General", // The Discussions category used for comments (must exist in your repo)
+	categoryId: "DIC_kwDOUeaXXc4DF_4o",
 	mapping: "pathname", // How to map a page to a discussion: 'pathname' | 'url' | 'title' | 'og:title'
 	reactionsEnabled: true, // Allow emoji reactions on comments
 	inputPosition: "bottom", // Position of the comment input box: 'top' | 'bottom'
 	lang: "en", // UI language of the comment widget, e.g. 'en', 'zh-CN'
-	theme: "light", // Base theme; it is automatically synced with the site's light/dark mode
+	theme: "preferred_color_scheme", // Follows the OS color scheme; also accepts 'light' / 'dark'
 };
