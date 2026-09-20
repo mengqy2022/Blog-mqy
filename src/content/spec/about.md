@@ -11,3 +11,8 @@ questions or ideas, leave a comment under a post!
 This site is open source — the source code lives in the repository below:
 
 ::github{repo="mengqy2022/Blog-mqy"}
+
+> ### Sources of images used in this site
+> - [Unsplash](https://unsplash.com/)
+> - [Giscus](https://giscus.app/zh-CN) 
+
