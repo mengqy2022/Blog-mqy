@@ -1,0 +1,4 @@
+id,category,part,value,footprint,qty,unit,price,brand,bomQty,inBom,description
+C2930027,Resistor,FRC0603J103 TS,10kΩ,0603,100,个,0.0056,"FOJAN(富捷)",8,true,"10k ohm ±5% 100mW thick film resistor, tape"
+C1591,Capacitor,CL10B104KB8NNNC,100nF,C0603,100,个,0.0195,"SAMSUNG(三星)",9,true,"100nF ±10% 50V MLCC, tape"
+C48641617,Connector,HX-PH2.0-2PZZ,HX-PH2.0-2PZZ,CONN-TH_2P-P2.50_HX-PH2.0-2PZZ,3,个,0,hanxia(韩下),3,true,"2-pin PH2.0 connector"

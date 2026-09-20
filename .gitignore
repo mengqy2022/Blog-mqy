@@ -32,3 +32,6 @@ yarn.lock
 # ide
 .idea
 *.iml
+
+# inventory build intermediates (local Excel copies/JSON)
+.inventory-tmp/
