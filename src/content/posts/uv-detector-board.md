@@ -13,7 +13,7 @@ tags:
 
 ## 1. Project Introduction
 
-<img src="../../assets/images/pcb_mau.jpg" alt="PCB Rendering" style="zoom: 20%;" />
+<img src="/images/pcb_mau.jpg" alt="PCB Rendering" style="zoom: 20%;" />
 
 This project is a compact ultraviolet (UV) intensity detection board designed with a **pure hardware architecture**.
 
@@ -91,7 +91,7 @@ The user can directly identify UV intensity through LED color changes.
 
 ## 3.1 Power Supply Circuit
 
-<img src="../../assets/images/schematic.png" alt="Schematic" style="zoom: 50%;" />
+<img src="/images/schematic.png" alt="Schematic" style="zoom: 50%;" />
 
 The power module contains:
 
@@ -150,7 +150,7 @@ Different comparison thresholds correspond to different UV levels.
 
 ## 4.1 PCB Top Layout
 
-<img src="../../assets/images/pcb_top_layout.png" alt="PCB Top" style="zoom:50%;" />
+<img src="/images/pcb_top_layout.png" alt="PCB Top" style="zoom:50%;" />
 
 The PCB adopts a circular structure.
 
@@ -174,7 +174,7 @@ Functional areas:
 
 ## 4.2 PCB Bottom Layer
 
-<img src="../../assets/images/pcb_bottom_layer.png" alt="PCB Bottom" style="zoom:50%;" />
+<img src="/images/pcb_bottom_layer.png" alt="PCB Bottom" style="zoom:50%;" />
 
 The bottom layer mainly provides:
 
@@ -188,7 +188,7 @@ The layout separates sensitive analog signals from power circuits to reduce inte
 
 # 5. Prototype Design
 
-<img src="../../assets/images/pcb_3d_layout.png" alt="PCB Prototype" style="zoom:20%;" />
+<img src="/images/pcb_3d_layout.png" alt="PCB Prototype" style="zoom:20%;" />
 
 The final PCB design integrates:
 
