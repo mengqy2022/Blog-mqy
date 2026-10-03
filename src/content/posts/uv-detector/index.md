@@ -12,18 +12,6 @@ draft: false
 
 ## 1. Project Introduction
 
-```yaml
----
-title: UV Detector Board
-published: 2026-10-03
-description: Complete engineering documentation of a compact UV detector board based on analog hardware circuits, including schematic analysis, PCB layout, and prototype design.
-image: "./pcb_mau.jpg"
-tags: ["PCB Design", "JLCEDA", "UV Detection"]
-category: Hardware
-draft: false
----
-```
-
 This project is a compact ultraviolet (UV) intensity detection board designed with a **pure hardware architecture**.
 
 The system does not rely on:
