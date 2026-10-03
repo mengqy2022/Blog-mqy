@@ -88,7 +88,7 @@ The user can directly identify UV intensity through LED color changes.
 
 ## 3.1 Power Supply Circuit
 
-<img src="./schematic.png" alt="Schematic" style="zoom: 50%;" />
+![Schematic](./schematic.png)
 
 The power module contains:
 
@@ -147,7 +147,7 @@ Different comparison thresholds correspond to different UV levels.
 
 ## 4.1 PCB Top Layout
 
-<img src="./pcb_top_layout.png" alt="PCB Top" style="zoom:50%;" />
+![PCB Top](./pcb_top_layout.png)
 
 The PCB adopts a circular structure.
 
@@ -171,7 +171,7 @@ Functional areas:
 
 ## 4.2 PCB Bottom Layer
 
-<img src="./pcb_bottom_layer.png" alt="PCB Bottom" style="zoom:50%;" />
+![PCB Bottom](./pcb_bottom_layer.png)
 
 The bottom layer mainly provides:
 
@@ -185,7 +185,7 @@ The layout separates sensitive analog signals from power circuits to reduce inte
 
 # 5. Prototype Design
 
-<img src="./pcb_3d_layout.png" alt="PCB Prototype" style="zoom:20%;" />
+![PCB Prototype](./pcb_3d_layout.png)
 
 The final PCB design integrates:
 
