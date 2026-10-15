@@ -1,36 +1,41 @@
 ---
-title: "ESP32-S3 Handheld: Circuit Design, PCB Layout, and a Multimedia System"
+title: "ESP32-S3 Handheld: Custom Hardware and the Xiaomeng Moss System"
 published: 2026-10-13
-updated: 2026-10-14
-description: "A practical overview of an ESP32-S3 handheld console, including the JLCPCB schematic and PCB project, firmware architecture, features, and photos of the finished device."
-image: "./front-menu.jpg"
+updated: 2026-10-15
+description: "From a custom two-layer PCB to v1.1-moss: an ESP32-S3 handheld with a six-app LVGL interface, Chinese ebooks, music, NES, time tools, eight built-in games, and new prototype photos."
+image: "./real-home.jpg"
 tags: ["ESP32-S3", "Embedded Systems", "Game Console", "PCB Design", "LVGL"]
 category: Hardware
 draft: false
 lang: en
 ---
 
-This project is a small **ESP32-S3 handheld console and multimedia device**. It combines a custom PCB, a 320×240 color display, physical controls, an SD card, audio output, wireless connectivity, and a menu-driven firmware system.
+This project brings a custom circuit, a two-layer PCB, a handheld enclosure, and an ESP-IDF application together in one portable device. At its center is an **ESP32-S3-WROOM-1-N16R8**, driving a 320×240 color display, physical controls, microSD storage, speaker output, and wireless services.
 
-The project is useful as both a working handheld and a complete embedded-systems study. The hardware design is available as a JLCPCB project archive, while the firmware is maintained in a separate public GitHub repository.
+The software is **小孟蜜汁系统 (Xiaomeng Mizhi System)**. Its current **v1.1-moss** interface opens six applications from a single home screen: ebooks, music, NES, time tools, built-in games, and system settings. It can serve as a reader, a music player, a small game console, and a platform for learning how an embedded system shares limited memory and peripherals.
 
-![The finished handheld showing the main menu](./front-menu.jpg)
+![The finished handheld showing the six-app Xiaomeng home screen](./real-home.jpg)
+
+The new prototype photos show the six-tile launcher on the physical display, Chinese text rendering, the music playback page, and two NES titles. The black enclosure places the directional control on the left and action buttons on the right, with four menu buttons above the screen and the status LED visible below the directional control.
+
+This article documents v1.1-moss alongside the circuit and PCB that support it. The editable hardware is available as a JLCPCB EDA project, and the firmware is maintained in the [ESP32-S3-XMMZ repository](https://github.com/mengqy2022/ESP32-S3-XMMZ).
 
 ## What the device can do
 
-The firmware is built around ESP-IDF 5.5 and LVGL 9. From the main menu, the device provides:
+The v1.1-moss project records **ESP-IDF 5.5.4**, **LVGL 9.5.0**, and **esp_lvgl_port 2.9.0** in its dependency lock file. Its six home-screen entries lead to the following functions:
 
-- TXT ebook reading, including UTF-8, UTF-16, GBK, and GB2312 text;
-- MP3 and WAV playback from the SD card;
-- JPG/JPEG image browsing and wallpaper playback;
-- NES game support through the nofrendo emulator core;
-- Built-in Snake, Shooter, Tetris, Breakout, and Invader games;
-- Wi-Fi scanning, connection management, saved passwords, and SNTP time synchronization;
-- BLE advertising with a `XiaoMeng-SYS` device name and readable battery information;
-- A WS2812B status light, system settings, button testing, and system information;
-- Serial file transfer through the CH340 interface, so an SD card can be managed without removing it.
+| Application | Current behavior |
+|---|---|
+| Ebooks | TXT reading with UTF-8, UTF-8 BOM, UTF-16 LE/BE, and common GBK/GB2312 text; per-book reading position |
+| Music | SD-card MP3 and PCM16 WAV playback; pause, track switching, volume control, and automatic next-track playback |
+| NES | ROM selection from the SD card and emulation through the nofrendo core |
+| Time tools | Stopwatch with lap capture and a countdown with six presets and an audible completion reminder |
+| Games | Eight built-in games, with shared pause/restart controls and separate saved high scores |
+| System settings | Wi-Fi, BLE, WS2812B lighting, system information, and button testing |
 
-The software uses virtual lists for long music and ebook libraries. Large books are read in 4 KB streams with a page index instead of loading the entire file into memory. This keeps the user interface responsive and avoids treating the 8 MB PSRAM as an unlimited buffer.
+The firmware also provides serial file-transfer commands through the CH340 bridge, allowing a compatible PC client to read and write SD-card files without removing the card. The maintenance tool in `tools/device_check.py` can request device status, inject button actions, and capture LCD refresh data for testing.
+
+Compared with the earlier firmware, v1.1-moss adds time tools and expands the built-in game collection from five to eight. **The gallery and wallpaper screensaver have been removed.** An idle home screen now stays visible; old image files can remain on the SD card, but the current system does not browse or rotate them.
 
 ## Hardware platform
 
@@ -41,12 +46,12 @@ The main controller is an **ESP32-S3-WROOM-1-N16R8** module with 16 MB Flash and
 | MCU | ESP32-S3-WROOM-1-N16R8 | Application processor and wireless controller |
 | Display | ST7789, 320×240 | Main graphical interface |
 | UI | LVGL 9 | Menus, lists, settings, and applications |
-| Storage | FAT32 microSD | Books, music, photos, wallpapers, and NES ROMs |
+| Storage | FAT32 microSD | Books, music, and NES ROMs |
 | Audio | MAX98357A over I2S | Speaker output for music and games |
 | Status light | WS2812B | System and activity indication |
 | Battery monitor | ADC voltage divider | Battery voltage estimation |
 
-The firmware's board configuration is kept in [`main/board_config.h`](https://github.com/mengqy2022/ESP32-S3-XMMZ/blob/main/main/board_config.h). This file is the best reference when wiring, debugging, or adapting the board.
+The firmware's board configuration is kept in [`main/board_config.h`](https://github.com/mengqy2022/ESP32-S3-XMMZ/blob/main/main/board_config.h). Read it together with the schematic and the relevant driver when wiring, debugging, or adapting the board: the battery divider and SD labels still need particular care, as discussed below.
 
 ## Electrical architecture
 
@@ -89,7 +94,7 @@ The ST7789 interface is routed through a dedicated SPI connection. The schematic
 
 The microSD connections are used in SPI mode by the firmware rather than as a four-bit SDIO bus. `SD_CMD`, `SD_CLK`, and `SD_DATA` become MOSI on GPIO11, clock on GPIO13, and MISO on GPIO9. R16-R18 are 10 kΩ pull-ups, and R19 = 22 Ω is in series with the clock line. Series resistance can help reduce ringing on a fast clock connection.
 
-The schematic's `SD_CD` label on GPIO10 connects to the card socket's `CD/DAT3` pin, which serves as chip select in SPI mode. Its name should not automatically be interpreted as a separate mechanical card-detect switch. The firmware lists GPIO10 as card detection and probes GPIO45/GPIO10 for chip select, so this connection deserves attention when bringing up an assembled board. The display and card otherwise use separate SPI2 and SPI3 buses in the firmware.
+The schematic's `SD_CD` label on GPIO10 connects to the card socket's `CD/DAT3` pin, which serves as chip select in SPI mode. Its name should not automatically be interpreted as a separate mechanical card-detect switch. Although `board_config.h` retains the historical card-detection comment, the actual `sd_card.c` driver tries **GPIO10 first, then GPIO45**, with descending clock rates of 40 MHz, 20 MHz, 5 MHz, and 400 kHz. It does not reject a card based on the GPIO10 level, and its presence function reports successful mounting. This distinction is useful when bringing up another board revision. The display and card otherwise use separate SPI2 and SPI3 buses.
 
 The MAX98357A receives I2S data, bit clock, and word select on GPIO40, GPIO41, and GPIO42. I2S carries digital audio to the amplifier, which converts it into a speaker-driving signal. U5 is supplied from `+5V`, and CN1 connects to its `OUTP` and `OUTN` outputs. The speaker is connected between these two outputs; neither terminal is a ground connection. C18 = 10 µF and C19 = 100 nF decouple the amplifier supply.
 
@@ -97,7 +102,7 @@ The microphone symbol is **ICS-43434**, with word select on GPIO1, serial clock 
 
 ### User controls and indicators
 
-The six panel buttons and four directional contacts of the five-way switch connect their GPIOs to ground when pressed. These are active-low inputs: a released input needs a pull-up, while a press reads low. The schematic labels them `KEY_MENU`, `KEY_OPTION`, `KEY_SELECT`, `KEY_START`, `KEY_A`, `KEY_B`, `KEY_LEFT`, `KEY_RIGHT`, `KEY_UP`, and `KEY_DOWN`. It explicitly shows a 10 kΩ pull-up on GPIO0; the other input pull-up configuration should be checked in the button driver. The switch's fifth contact is not connected in the drawing. A WS2812B-compatible status LED is driven from GPIO38.
+The six panel buttons and four directional contacts of the five-way switch connect their GPIOs to ground when pressed. These are active-low inputs: a released input needs a pull-up, while a press reads low. The schematic labels them `KEY_MENU`, `KEY_OPTION`, `KEY_SELECT`, `KEY_START`, `KEY_A`, `KEY_B`, `KEY_LEFT`, `KEY_RIGHT`, `KEY_UP`, and `KEY_DOWN`. It explicitly shows a 10 kΩ pull-up on GPIO0, and the supplied button driver enables internal GPIO pull-ups. The switch's fifth contact is not connected in the drawing. A WS2812B-compatible status LED is driven from GPIO38.
 
 ## PCB structure and placement
 
@@ -152,15 +157,90 @@ The SD card uses a separate SPI3 bus: clock on GPIO13, MOSI on GPIO11, and MISO 
 
 The control panel has a five-way directional switch and several independent buttons. The main mappings include GPIO18 for Menu/Home, GPIO8 for Option, GPIO16 for Select/Back, GPIO17 for Start/Confirm, GPIO15 for A, GPIO5 for B, and GPIO19, GPIO6, GPIO7, and GPIO20 for Left, Right, Up, and Down. GPIO0 is used by the firmware as a normal shortcut button, although its bootloader behavior is still controlled by the ESP32-S3 ROM during reset.
 
-![The front panel running a game](./front-game.jpg)
+### Physical buttons and everyday operation
 
-## A restrained interface for a small screen
+The firmware uses the panel labels KEY1–KEY6 and SW2 in its on-screen instructions. Their roles are deliberately similar across applications, while NES maps the action buttons to a console controller.
 
-The user interface uses a dark “starry night” visual language designed for a 320×240 screen. The background is near-black, application pages are built from layered cards, and cyan-blue is reserved for focus states and important status information. Short fade transitions and compact lists keep the interface readable without putting unnecessary rendering work on the microcontroller.
+| Panel control | GPIO | Main role |
+|---|---:|---|
+| KEY1 | 18 | Home; hold for about one second to exit NES |
+| KEY2 | 8 | System information from home; pause in built-in games; NES volume up |
+| KEY3 | 16 | Back; NES SELECT |
+| KEY4 | 17 | Open/confirm; start or pause where indicated; NES START |
+| KEY5 / KEY6 | 15 / 5 | Volume up/down on home and music pages; NES A/B |
+| SW2 | 0 | Cycle lighting modes from home; NES volume down |
+| Left / Right / Up / Down | 19 / 6 / 7 / 20 | Navigate, turn pages, or control games |
 
-The firmware also includes a screensaver. When the main screen has been idle for about 30 seconds, it can rotate wallpapers from the SD card and wake when a button is pressed.
+SW2 retains the logical name `KEY_BOOT` in the source. It is a normal shortcut after startup, but holding GPIO0 during reset still affects ROM bootloader entry. The direction switch contributes four directional contacts; its center contact is not connected in the schematic.
 
-![The NES emulator running on the handheld](./front-nes.jpg)
+## The Moss interface on a 320×240 screen
+
+The current theme uses a deep moss background (`0x101B1C`), layered cards, warm white text, and a mint focus color (`0xC5F3D3`). Monochrome 24-pixel line icons identify the six applications. A 120 ms fade introduces pages, while a bright outline and a slightly lighter card make the selected tile visible without a large animation.
+
+Direction keys follow the launcher's 3×2 geometry, and returning from an application preserves the selected position. The top bar shows the clock, Wi-Fi state, and estimated battery percentage; the application area also reports SD-card readiness. The clock shows an unsynchronized state until network time is available. Volume and lighting shortcuts appear briefly as small notices instead of opening another settings screen.
+
+The photographs show the real LCD through a camera, so its apparent cyan tint and brightness are different from the theme's source color values. The battery percentage shown in the home photo is also a firmware estimate, subject to the divider calibration discussed in the power section.
+
+### Chinese ebooks and paper-colored reading
+
+The reader switches to a light, paper-colored page with dark text. A book title, encoding label, and page count frame the reading area. The new photo shows `三字经.txt` rendered in Chinese, with UTF-8 and page 7 of 13 visible in the footer.
+
+![Chinese TXT reading on the handheld, showing the title, UTF-8 encoding, and page count](./real-ebook.jpg)
+
+TXT files are scanned from `/sdcard/books`. The reader accepts UTF-8 and UTF-16 variants as well as common GBK/GB2312 text, using the included GB2312 font rather than implying complete Unicode glyph coverage. Up, Left, or KEY5 turns back a page; Down, Right, or KEY6 advances. KEY3 returns to the book list, and KEY1 returns home. Leaving the reader saves a separate position for each book in NVS, with compatibility for the older bookmark format.
+
+Large books use **4 KB streaming reads and a page index** rather than loading the entire text into PSRAM. This removes the old fixed 4 MB whole-book buffer limit, although initial pagination still takes time and the index itself consumes memory. The book list reuses five visible rows as the selection moves through the catalog.
+
+### Music with an explicit playback state
+
+The music page shows the selected filename, its source, the track's position in the library, playback state, and volume. The new photo shows an MP3 from the SD card, with track 5 of 33 selected and volume at 35%.
+
+![The handheld music page displaying an SD-card MP3, playback controls, and volume](./real-music.jpg)
+
+Left and Right change tracks, KEY4 pauses or resumes, and KEY5/KEY6 changes volume. KEY3 stops playback and returns to the list; KEY1 stops and returns home. A normal track ending advances to the next song and wraps from the final song to the first.
+
+The supported local formats are **MP3 and PCM signed 16-bit little-endian WAV**, with mono or stereo WAV input. MP4/M4A files are not supported by this player. The bar in the photo represents volume; the current page does not present an estimated playback-progress bar. Its labels update when playback state or volume changes, avoiding needless periodic redraws.
+
+### Time tools
+
+Time tools provide an offline stopwatch with lap capture and a countdown with **10-second, 1-minute, 5-minute, 10-minute, 25-minute, and 45-minute** presets. Left/Right switches modes, KEY4 starts or pauses, and KEY5 resets. KEY6 records a lap while the stopwatch runs; when the countdown is paused, Up/Down or KEY6 selects a preset.
+
+At completion, the countdown displays a message and requests a three-note sound three times, roughly one second apart. Any button stops the remaining reminders and also performs its normal action. Sound follows system volume and mute settings. **Switching mode or leaving time tools pauses the timer**; it does not keep counting in the background while another application runs. State is retained within the current boot session.
+
+### Eight built-in games
+
+The built-in game hall is separate from NES and needs no external ROM for these eight games:
+
+| Game | Gameplay and current additions |
+|---|---|
+| Snake | Classic, wraparound, and fast modes; buffered turns that reject a direct reversal |
+| Tetris | Seven-bag piece selection, next-piece preview, landing guide, and hard drop |
+| Breakout | Three stages, three lives, and paddle-angle rebounds |
+| Shooter | Hold-to-fire controls, three lives, and increasing difficulty |
+| Space Invaders | Successive waves, enemy shots, and hit feedback |
+| 2048 | Directional tile merging, with invalid moves leaving the board unchanged |
+| Pong | A computer opponent and a first-to-seven match |
+| Obstacle Runner | Buffered jumps, variable jump height, and increasing difficulty |
+
+KEY2 or KEY4 pauses and resumes a built-in game. After a game ends, KEY4 restarts, KEY3 returns to the game hall, and KEY1 returns home. Each game's high score is stored independently in NVS and written when a new record is reached. The shared runtime advances game logic in fixed 33 ms steps; that timing is a logic interval, not a measured display frame rate.
+
+### NES on the physical prototype
+
+The NES application reads `.nes` files from `/sdcard/games` and uses the nofrendo emulator core. The new photographs show a tank game in progress and the title screen of *Contra*, connecting the software feature list to the assembled device.
+
+![A tank game running through the handheld's NES application](./real-nes-tank.jpg)
+
+![The Contra title screen on the assembled ESP32-S3 handheld](./real-nes-contra.jpg)
+
+The emulator renders a native **256×240** image centered on the 320×240 display, leaving side margins instead of stretching every frame. Direction keys act as the D-pad, KEY5/KEY6 as A/B, and KEY3/KEY4 as SELECT/START. Hold KEY1 for about one second to exit; KEY2 and SW2 adjust volume during emulation.
+
+The source currently limits the ROM browser to 24 entries and the loaded ROM size to 2 MB. Compatibility depends on the ROM and mapper, so the photographs demonstrate those examples rather than universal NES support. The application stops Wi-Fi before emulation to free internal memory, and its controller path samples GPIO directly to reduce dependence on the menu input task.
+
+### Wireless services and system settings
+
+Wi-Fi supports 2.4 GHz scanning, connection management, and saved credentials. A successful connection can synchronize the clock using SNTP with UTC+8 local time. BLE supports advertising and scanning, using the `XiaoMeng-SYS` name and GATT device information and battery data. The BLE battery value shares the same calibration limitations as the home-screen estimate.
+
+Settings also expose WS2812B lighting modes, color and brightness, system and memory information, SD-card re-detection, and a button test page. Together these tools make it easier to check the assembled hardware without changing applications or reconnecting a debugger.
 
 ## JLCPCB schematic and PCB project
 
@@ -174,7 +254,7 @@ The archive is intended to be opened in the JLCPCB EDA environment. It contains 
 
 The archive is shared as an engineering reference. Before manufacturing a modified board, check the schematic, footprints, component availability, assembly rules, and the actual revision of the physical hardware. The firmware pin definitions and the EDA project should be read together because they describe different sides of the same system: the EDA project describes the electrical design, while `board_config.h` describes how the firmware uses those connections.
 
-![Rear view of the handheld enclosure](./back-view.jpg)
+![Rear view of the handheld enclosure from the earlier build](./back-view.jpg)
 
 ## Firmware repository
 
@@ -182,11 +262,42 @@ The complete device software is available here:
 
 **[ESP32-S3-XMMZ on GitHub](https://github.com/mengqy2022/ESP32-S3-XMMZ)**
 
-The repository contains the ESP-IDF application, LVGL integration, display and audio drivers, button handling, SD-card services, Wi-Fi and BLE services, the NES core, built-in games, tools, and example storage data. It is released under the MIT License. The MP3 decoder and NES emulator include their own third-party license files, which should be preserved when redistributing the firmware.
+The repository contains the ESP-IDF application, LVGL integration, display and audio drivers, button handling, SD-card services, Wi-Fi and BLE services, the NES core, eight built-in games, the time tool, maintenance scripts, and example storage data. It is released under the MIT License. The Helix MP3 decoder and NES emulator include their own third-party license files, which should be preserved when redistributing the firmware.
+
+## Firmware architecture and memory budget
+
+Startup proceeds from NVS initialization to hardware self-test, LVGL setup, wireless services, and the home menu. Display, buttons, LED, battery sampling, audio, and SD storage each have a driver; application pages use shared UI helpers and services rather than configuring these peripherals themselves.
+
+| Source area | Responsibility |
+|---|---|
+| `main/app_main.c` | Startup, hardware initialization, and creation of the UI task |
+| `main/board_config.h` | Target protection, pin assignments, and board constants |
+| `main/apps/` | Launcher, ebooks, music, NES browser, time tools, settings, and shared UI |
+| `main/apps/games/` | Eight games, shared runtime, and 2048 rules |
+| `main/drivers/` | ST7789, buttons, SD card, I2S audio, battery ADC, and status LED |
+| `main/services/` | Music decoding, Wi-Fi, BLE, lighting state, and serial maintenance |
+| `main/nes/` | Emulator integration and nofrendo core |
+| `tools/` | Font/asset generation, repository checks, and device maintenance |
+
+The 8 MB PSRAM helps with books, catalogs, and emulation, but some work still requires internal SRAM. The implementation makes that distinction explicit:
+
+- **One LVGL execution path:** regular application pages run serially in a UI task with a 20 KB internal stack. The port's default rendering task is removed so two threads do not drive LVGL at once. During NES, the normal UI thread waits while a dedicated video worker handles presentation.
+- **A small DMA-capable display buffer:** RGB565 drawing uses a single one-eighth-screen buffer, about 19.2 KB, in internal DMA memory. In this SPI configuration, keeping the buffer there avoids a temporary internal copy allocation on each flush.
+- **Reuse and release:** the book and music lists reuse five visible rows, the game hall uses four, and transitions delete the previous LVGL screen tree. Music catalog data and large decoder/emulator stacks prefer PSRAM where supported.
+- **Incremental work:** books stream through a 4 KB buffer with a page index; the home clock label changes only when the displayed minute changes; playback labels change with player state. These choices limit object counts and unnecessary redraws.
+
+This architecture is documented in [`docs/DESIGN.md`](https://github.com/mengqy2022/ESP32-S3-XMMZ/blob/main/docs/DESIGN.md) and the current implementation in [`main/lvgl_port.c`](https://github.com/mengqy2022/ESP32-S3-XMMZ/blob/main/main/lvgl_port.c). Its value is in how it allocates scarce internal memory; it is not a substitute for measuring frame rate on the assembled device.
 
 ## Building and flashing the firmware
 
-The project targets ESP32-S3 only. A typical build environment uses ESP-IDF 5.5.x:
+The project targets ESP32-S3 only. The supplied dependency lock records ESP-IDF 5.5.4, LVGL 9.5.0, and esp_lvgl_port 2.9.0. After installing ESP-IDF and opening its development environment, obtain the source:
+
+```bash
+git clone https://github.com/mengqy2022/ESP32-S3-XMMZ.git
+cd ESP32-S3-XMMZ
+```
+
+Then configure and build:
 
 ```bash
 idf.py set-target esp32s3
@@ -202,33 +313,37 @@ idf.py -p COM7 flash monitor
 
 If the build reports classic-ESP32 toolchain errors or missing ESP32-S3 GPIO definitions, clear the old target configuration and select `esp32s3` again. The repository README contains the complete recovery procedure and the dependency information required by ESP-IDF Component Manager.
 
+Component Manager restores managed dependencies from `main/idf_component.yml` and `dependencies.lock`. Generated font and icon C files are already included, so an ordinary build does not require regenerating those assets. The supplied source archive contains no prebuilt firmware binary; building produces the files used for flashing.
+
 ## SD card layout
 
-The firmware expects a FAT32 card with directories like these:
+The three content directories used by the current applications are:
 
 ```text
 /sdcard/
 ├── books/       # .txt ebooks
 ├── music/       # .mp3 and .wav files
-├── games/       # .nes ROM files
-├── gallery/     # .jpg and .jpeg images
-├── Pictures/    # compatible image directory
-├── DCIM/        # compatible image directory
-└── wallpaper/   # screensaver images
+└── games/       # .nes ROM files
 ```
 
-Long file names and UTF-8 file names are enabled, so Chinese book and game names can be used directly on the card.
+`/sdcard` is the firmware's mount point; on the card itself, place `books`, `music`, and `games` at the root. Use a FAT32 card. Long file names and UTF-8 file names are enabled, so Chinese book and game names can be used directly. JPG files from older versions can remain on the card, but there is no gallery or wallpaper application in v1.1-moss.
 
-![The display turned off during testing](./display-off.jpg)
+![The handheld enclosure with the display off, from the earlier build](./display-off.jpg)
+
+## Validation recorded with v1.1-moss
+
+The supplied [`Moss release notes`](https://github.com/mengqy2022/ESP32-S3-XMMZ/blob/main/docs/MOSS_RELEASE.md) record build and device checks for this version. They report two rounds of entering, operating, pausing, and leaving all eight built-in games; SD ebook reading; MP3 playback with repeated track changes; Wi-Fi scan-page re-entry; stopwatch and countdown checks; repeated time-tool transitions; two NES launches and long-press exits; and a 45-second idle check that kept the home screen visible. The notes also record a 2048 rules test, including 40,000 randomized moves checking sum conservation.
+
+Those are project validation records, while the five new photographs directly show the launcher, reader, music page, and two NES screens. They do not establish measured battery runtime, display frame rate, speaker loudness, or long-term wireless stability. The release notes describe earlier JPEG-stack and coexistence-related failures, the removal of image paths, stack adjustments, and a change to hardware Wi-Fi/BLE arbitration with modem sleep disabled. The resulting networking power use and long-term concurrent behavior still need observation.
 
 ## Design notes and possible next steps
 
-The project now documents the circuit, two-layer PCB, connector placement, firmware, and physical prototype together. The next practical checks are to reconcile the battery-divider constant with R3/R8, verify the LCD rail under load, confirm the SD chip-select mapping, and record the installed battery specification. The schematic also notes that USB1 uses LCSC part C49261586 and that connector height matters when choosing a replacement.
+The project now documents the circuit, two-layer PCB, connector placement, v1.1-moss firmware, and physical prototype together. The next practical checks are to reconcile the battery-divider constant with the assembled resistor values, verify the LCD rail under load, confirm the SD chip-select mapping, and record the installed battery specification. The schematic also notes that USB1 uses LCSC part C49261586 and that connector height matters when choosing a replacement.
 
-Other natural extensions include a dedicated wiring diagram, a pinout illustration for the front-panel controls, benchmark measurements for battery life and frame rate, and a release package containing a reproducible firmware binary. Keeping those items in the firmware repository would make the project easier for other builders to reproduce.
+Further development could add a front-panel pinout illustration, measured battery-life and frame-rate results, and a versioned release package with a reproducible firmware binary. Keeping those records alongside the source would make it easier to relate a photo, a PCB revision, and an exact firmware build. The [user guide](https://github.com/mengqy2022/ESP32-S3-XMMZ/blob/main/docs/USER_GUIDE.md) and [Moss release notes](https://github.com/mengqy2022/ESP32-S3-XMMZ/blob/main/docs/MOSS_RELEASE.md) provide more detailed operation and validation information.
 
 ## Conclusion
 
-This ESP32-S3 handheld is more than a game console. It is a compact example of how a custom PCB, an RTOS-based firmware stack, a graphical interface, file-based storage, audio, wireless services, and emulation can be integrated into one portable device. The public firmware and JLCPCB project make the design inspectable, reusable, and ready for further hardware and software improvements.
+This ESP32-S3 handheld is more than a game console. Its current Moss system combines a six-app LVGL interface, Chinese ebook rendering, local audio, NES emulation, eight small games, time tools, wireless setup, and hardware diagnostics on a custom portable board. The public firmware, JLCPCB project, and new real-device photos make the design inspectable while leaving clear next steps for battery calibration, enclosure refinement, and longer-term performance measurements.
 
 ::github{repo="mengqy2022/ESP32-S3-XMMZ"}
