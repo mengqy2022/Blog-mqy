@@ -169,4 +169,4 @@ The valuable part of this project is not simply lighting a small screen. It is t
 
 The result is a tool screen that can stay on the desk without interrupting the main workflow. A glance tells you whether the PC is online, whether resources are under pressure, how far today's Codex usage has progressed, and which local tool to open next.
 
-::github{repo="mengqy2022/Esp32-s3-touch"}
+::github{repo="mengqy2022/Esp32-touch"}
