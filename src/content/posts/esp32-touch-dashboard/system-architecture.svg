@@ -47,6 +47,6 @@
     <text x="480" y="406" fill="#b8d5ff" font-size="14" text-anchor="middle">UART</text>
     <text x="248" y="468" fill="#b6c6da" font-size="15" text-anchor="middle">Only numeric summaries cross the link.</text>
     <text x="248" y="493" fill="#b6c6da" font-size="15" text-anchor="middle">No prompts, replies, or API keys.</text>
-    <text x="40" y="579" fill="#91a9c5" font-size="14">ESP32 Touch Monitor · Esp32-s3-touch project · October 2026</text>
+    <text x="40" y="579" fill="#91a9c5" font-size="14">ESP32 Touch Monitor · Esp32-touch project · October 2026</text>
   </g>
 </svg>
