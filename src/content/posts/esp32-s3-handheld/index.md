@@ -1,8 +1,8 @@
 ---
-title: "ESP32-S3 Handheld: Custom Hardware and the Xiaomeng Moss System"
+title: "ESP32-S3 Handheld: Custom Hardware and the Xiaomeng MZ System"
 published: 2026-10-13
 updated: 2026-10-15
-description: "From a custom two-layer PCB to v1.1-moss: an ESP32-S3 handheld with a six-app LVGL interface, Chinese ebooks, music, NES, time tools, eight built-in games, and new prototype photos."
+description: "From a custom two-layer PCB to v1.1-MZ: an ESP32-S3 handheld with a six-app LVGL interface, Chinese ebooks, music, NES, time tools, eight built-in games, and new prototype photos."
 image: "./real-home.jpg"
 tags: ["ESP32-S3", "Embedded Systems", "Game Console", "PCB Design", "LVGL"]
 category: Hardware
@@ -12,7 +12,7 @@ lang: en
 
 This project brings a custom circuit, a two-layer PCB, a handheld enclosure, and an ESP-IDF application together in one portable device. At its center is an **ESP32-S3-WROOM-1-N16R8**, driving a 320×240 color display, physical controls, microSD storage, speaker output, and wireless services.
 
-The software is **小孟蜜汁系统 (Xiaomeng Mizhi System)**. Its current **v1.1-moss** interface opens six applications from a single home screen: ebooks, music, NES, time tools, built-in games, and system settings. It can serve as a reader, a music player, a small game console, and a platform for learning how an embedded system shares limited memory and peripherals.
+The software is **小孟蜜汁系统 (Xiaomeng Mizhi System)**. Its current **v1.1-MZ** interface opens six applications from a single home screen: ebooks, music, NES, time tools, built-in games, and system settings. It can serve as a reader, a music player, a small game console, and a platform for learning how an embedded system shares limited memory and peripherals.
 
 ![The finished handheld showing the six-app Xiaomeng home screen](./real-home.jpg)
 
