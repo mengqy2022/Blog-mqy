@@ -22,7 +22,7 @@ This article documents v1.1-moss alongside the circuit and PCB that support it. 
 
 ## What the device can do
 
-The v1.1-moss project records **ESP-IDF 5.5.4**, **LVGL 9.5.0**, and **esp_lvgl_port 2.9.0** in its dependency lock file. Its six home-screen entries lead to the following functions:
+The v1.1-MZ project records **ESP-IDF 5.5.4**, **LVGL 9.5.0**, and **esp_lvgl_port 2.9.0** in its dependency lock file. Its six home-screen entries lead to the following functions:
 
 | Application | Current behavior |
 |---|---|
