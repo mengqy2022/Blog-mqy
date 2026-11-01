@@ -1,8 +1,8 @@
 ---
 title: "ESP32 Touch Monitor: PC Telemetry, Window Streaming, and Local Tools"
 published: 2026-10-15
-updated: 2026-10-20
-description: "An illustrated engineering log for a 320×240 ESP32 touch terminal: PC telemetry, Codex and Claude Code usage, selected-window streaming, and Salary Cat, a local earnings dashboard with work calendars and animated cats."
+updated: 2026-11-01
+description: "An illustrated engineering log for a 320×240 ESP32 touch terminal: PC telemetry, daily model names and cost breakdowns for Codex and Claude Code, selected-window streaming, and Salary Cat with work calendars and eight animated cats."
 image: "./front-monitor.jpg"
 tags: ["ESP32", "LVGL", "Embedded Systems", "Touch UI", "PC Monitor", "PC Screen"]
 category: Hardware
@@ -14,7 +14,7 @@ Some information belongs in a desktop window. Other information is useful when i
 
 The home dashboard is drawn on the device from compact data packets. A separate PC SCREEN page can stream one selected Windows application and send touch input back. Alongside these connected features, the ESP32 runs its own games, inventory, vocabulary workspace, and now **Salary Cat**: a local earnings dashboard that turns a work schedule into a daily progress display, accompanied by an animated cat.
 
-This log follows the **October 20, 2026 source update**. It adds illustrated screen guides and Salary Cat while retaining the existing PC monitor and window-sharing system. The published EXE and firmware downloads are still the October 18 release and **do not include Salary Cat**; the new feature currently requires building the updated source.
+This log follows the **November 1, 2026 release**, with companion version **2026.11.01.2** and matching firmware. The update adds a desktop breakdown of today's model usage and estimated costs, synchronizes model names to the device, and includes Salary Cat's weekend animations and Friday color fix. **The published EXE and full firmware downloads now include these features**, so Salary Cat no longer requires a source build.
 
 ![Earlier physical prototype showing the PC monitor and Codex dashboard](./front-monitor.jpg)
 
@@ -22,7 +22,7 @@ This log follows the **October 20, 2026 source update**. It adds illustrated scr
 
 ## The finished device
 
-The prototype is a landscape 320×240 LCD mounted in a black enclosure. The home screen compresses the important information into a few readable cards: the top bar shows the date, weekday, Wi-Fi state, and clock; three circular gauges show CPU, GPU, and RAM; the AI usage card shows either Codex or Claude Code tokens and an estimated CNY cost; the bottom row opens GAME, SYSTEM, and OTHER. The SYSTEM menu also contains PC SCREEN, a low-rate viewer for one selected PC window.
+The prototype is a landscape 320×240 LCD mounted in a black enclosure. The home screen compresses the important information into a few readable cards: the top bar shows the date, weekday, Wi-Fi state, and clock; three circular gauges show CPU, GPU, and RAM; the AI usage card shows either Codex or Claude Code tokens, an estimated CNY cost, and the models used today; the bottom row opens GAME, SYSTEM, and OTHER. The SYSTEM menu also contains PC SCREEN, a low-rate viewer for one selected PC window.
 
 The screen has three independent data paths. PC telemetry is sampled about once per second and becomes offline after five seconds without a new `STAT` packet. Codex and Claude Code usage are recomputed about every five seconds and each becomes `NO DATA` after 90 seconds without a fresh packet or when the host date does not match the device date. PC SCREEN frames share the same serial link and can delay telemetry while a frame is transferred. “Online” is therefore a time-limited state, rather than a permanent result from the last successful connection.
 
@@ -74,16 +74,17 @@ The home page is a continuously updating dashboard rather than a scrolling list:
 
 - The top bar shows the device date, weekday, Wi-Fi state, and clock. Time can arrive over USB, while Wi-Fi SNTP remains available.
 - CPU, GPU, and RAM use circular gauges. Temperatures and used/total memory sit below the gauges. If the host cannot provide a sensor, the display shows `--` instead of pretending the value is zero.
-- The AI card lets the user choose CODEX or CLAUDE on the device. It shows that provider's today's input plus output tokens. The choice is saved in NVS and is not overwritten by the host's normal refresh or reconnect packets.
+- The AI card lets the user choose CODEX or CLAUDE on the device. Tokens and estimated cost are totals across that provider's models used today. The choice is saved in NVS and is not overwritten by the host's normal refresh or reconnect packets.
+- Above the amount, a model-name strip follows the selected provider. Long names scroll horizontally; missing or expired names show `MODELS --`. The list describes today's local usage, including completed sessions and subagents, rather than models currently running at the same time.
 - Costs appear as an estimate such as `~¥12.34`. If a model price or required token breakdown is missing, the display stays at `~¥--` while the token count remains available.
 
 The three bottom categories keep the 240-pixel-high home page from becoming a crowded menu. The current home page stays visible while idle, so the monitor remains in view during normal desktop use. Daily goals, progress bars, and the old combined-source display have been removed from the current system.
 
 | CODEX selected | CLAUDE selected |
 | --- | --- |
-| ![Current home screen with CODEX selected](./images/device/home.png) | ![Current home screen with CLAUDE selected](./images/device/home-claude.png) |
+| ![Current home screen with CODEX selected and scrolling daily model names](./images/device/home-models.png) | ![Current home screen with CLAUDE selected and its daily model name](./images/device/home-models-claude.png) |
 
-*All new PNGs and the Salary Cat GIF in this article are rendered from the current C interface with LVGL 8.4 on a computer, at the native 320×240 resolution. They are interface examples, not device photographs. The fixed sample is October 20, 2026 at 10:30, with illustrative PC and AI values. Chinese labels match the firmware; captions explain them in English. These renders do not establish physical touch behavior or settings persistence after a restart.*
+*Device screen examples in this article are rendered from the actual C interface with LVGL 8.4 on a computer, at the native 320×240 resolution. They are interface examples, not device photographs. Home and menu examples use October 20, 2026 at 10:30 with synthetic PC and AI values; the model strip is captured at one point in its scroll. Salary Cat examples use the dates described in their captions. Chinese labels match the firmware; captions explain them in English. The desktop AI Usage image below comes from a real GUI test window with a separate synthetic dataset. These images do not establish physical touch behavior or settings persistence after a restart.*
 
 ## Three categories for daily use
 
@@ -129,7 +130,23 @@ Open **OTHER → SALARY CAT** to see a monochrome dashboard: an animated cat on 
 
 *A looping preview sampled from the LVGL renderer. It illustrates the animation and layout; its playback rate is not a measurement of the physical display.*
 
-The five weekday cats give the page a small change each day; weekends reuse Friday's cat. The animation keeps playing while this page is open, including breaks, evenings, and rest days. Opening another page releases its playback buffer and timer. Salary Cat never takes over an active game or PC SCREEN session. The original home page remains the default at boot, with Salary Cat available as an optional startup page.
+Seven day-specific cats give the page a small change each day, with an eighth animation for national weekend makeup shifts. The animation keeps playing while this page is open, including breaks, evenings, and rest days. Opening another page releases its playback buffer and timer. Salary Cat never takes over an active game or PC SCREEN session. The original home page remains the default at boot, with Salary Cat available as an optional startup page.
+
+### Weekend cats and a Friday color fix
+
+Saturday and Sunday now have their own cats. A separate makeup-workday cat appears only when the enabled, covered China calendar explicitly marks a weekend date as work. A personal rest override takes priority. A personal extra-work date or a recurring weekend shift keeps the cat for that day of the week; disabling the China calendar also removes the special makeup selection.
+
+| Saturday rest day | Sunday rest day | National weekend makeup shift |
+| --- | --- | --- |
+| ![Saturday cat with zero earnings on a rest day](./images/salary-cat/saturday-animated.gif) | ![Sunday cat with zero earnings on a rest day](./images/salary-cat/sunday-animated.gif) | ![Special makeup-workday cat with scheduled earnings](./images/salary-cat/makeup-animated.gif) |
+
+*Actual LVGL page previews with fixed examples for October 17, October 18, and October 10, respectively. Ordinary weekend rest days show zero daily earnings; the October 10 makeup shift accumulates scheduled earnings. These loops illustrate the selection and layout, not physical display frame rates.*
+
+The October 30 fix also preserves Friday's white body as it enters and leaves the image boundary. The asset converter now closes the open edge before removing the white background, so the body is no longer mistaken for background. The motion, frame timings, and 4.30-second loop stay the same; the other seven animations are unchanged by this fix.
+
+![Friday cat entering and leaving the panel with its white body preserved](./images/salary-cat/friday-animated.gif)
+
+*A complete Friday loop rendered by LVGL, using October 30 at 10:30 as a fixed example. The GIF contains 30 frames after identical images are merged, covering the firmware animation's full 33-frame, 4.30-second cycle.*
 
 ### Three amounts, one tap
 
@@ -184,7 +201,7 @@ This calendar is local data. It does not read Outlook or Windows events, downloa
 
 ### Animation within a small memory budget
 
-Salary Cat works without an SD card. Its five cats use 66 frames of 112×112 RGB332 run-length encoded artwork, totaling **158,908 bytes** in firmware. Only the active animation needs a **13,568-byte** playback buffer, which is freed on exit. A page-specific Noto Sans SC subset supplies the Chinese labels. The calculation, persistence, and UI are separated into `salary.c`, `salary_store.c`, and `salary_ui.c`; host calendar validation and synchronization live in `tools/work_calendar.py`.
+Salary Cat works without an SD card. Its eight cats use 87 frames of 112×112 RGB332 run-length encoded artwork, totaling **257,896 bytes** in the current firmware asset. Only the active animation needs a **13,568-byte** playback buffer, which is freed on exit. The weekend additions increase stored artwork without increasing this buffer. A page-specific Noto Sans SC subset supplies the Chinese labels. The calculation, persistence, and UI are separated into `salary.c`, `salary_store.c`, and `salary_ui.c`; host calendar validation and synchronization live in `tools/work_calendar.py`.
 
 The cat artwork was supplied for this project and has separate [source and usage notes](https://github.com/mengqy2022/Esp32-touch/blob/main/assets/salary_cat/README.md); the Chinese font uses the SIL Open Font License. These assets are documented separately from the code's license in the [third-party notices](https://github.com/mengqy2022/Esp32-touch/blob/main/docs/THIRD_PARTY_NOTICES.md).
 
@@ -195,6 +212,7 @@ The device and Windows program use an ASCII line protocol at 115200 baud. The ma
 ```text
 PC:STAT|cpu|gpu|cpu_C|gpu_C|mem|used_MB|total_MB
 PC:USAGE|source|today_tokens|0|YYYYMMDD|estimated_CNY_fen
+PC:MODELS|source|YYYYMMDD|model names
 PC:AI|source
 PC:TIME|unix_seconds
 PC:TZOFF|minutes
@@ -202,6 +220,8 @@ PC:NAME|hostname
 ```
 
 `PC:STAT` and each provider's `PC:USAGE` cache have independent validity windows: a fresh AI packet does not make an expired CPU sample online again. The device's `PC:AI` selection is persisted separately, so normal telemetry cannot silently switch the visible provider. The old `PC:CODEX` packet remains supported for compatibility, with the former daily-goal slot ignored.
+
+`PC:MODELS` adds optional metadata without changing the usage packet. Each provider has its own names and date; names expire independently after 90 seconds and are hidden when the associated usage is stale or belongs to another day. The host deduplicates names and bounds the list to 191 printable ASCII bytes, with a remaining count when necessary. An empty list clears the names, and `PC:MODELS?` reads back the selected provider's metadata for diagnosis. Older firmware can still receive the unchanged token and cost packets, but both host and firmware must be upgraded to display model names.
 
 The same UART also carries `SCREEN:?`, `SCREEN:OPEN`, `SCREEN:CLOSE`, `SCREEN:APP`, `SCREEN:FRAME`, `SCREEN:STATUS`, and input messages, as well as `FILE:LIST`, `FILE:PUT`, `FILE:GET`, and `FILE:DEL`. A frame announces its session, number, encoded length, and FNV-1a checksum, waits for `SCREEN:READY`, then sends exactly the RLE payload. The device confirms `SCREEN:OK` only after validation. The shared reader processes every complete line in a read chunk and retains a partial line across reads; binary frame and file payloads never interleave with other host writes.
 
@@ -219,19 +239,35 @@ Only one program should own the serial port at a time. Pause the Windows monitor
 
 ## AI usage and cost are explainable estimates
 
-Codex and Claude Code usage come from their local session logs and are grouped by the computer's local calendar date. The readers parse model and usage fields and keep incremental offsets to avoid counting the same snapshot twice. They do not transmit prompt text, response text, credentials, or API keys to the device.
+Codex and Claude Code usage come from their local session logs and are grouped by the computer's local calendar date. The readers parse model and usage fields and keep incremental offsets to avoid counting the same snapshot twice. They do not transmit prompt text, response text, credentials, or API keys to the device. Codex's total is input plus output, with cached input already included. Claude's input fields use a different convention, so the reader adds cache reads and writes before forming a comparable input-plus-output total.
 
-The amount uses the locally configured `codex_prices.json`: normal input, cached input, cache writes, and output are priced separately and then converted to CNY. The user owns the rates and exchange rate; the program does not connect to an official billing endpoint and does not claim to show plan balance. If the model is unknown, the breakdown is incomplete, or the price file is invalid, the amount remains unavailable instead of presenting a misleading partial total. The device remembers whether CODEX or CLAUDE is selected, while the host continues sending both independent caches.
+### From a daily total to an explainable breakdown
+
+In the desktop companion, open **AI Usage → Query source → CODEX or CLAUDE** to see today's model names, context tiers, input including caches, cache reads, cache writes, output, and estimated CNY amounts. The list refreshes about every five seconds, with an immediate-refresh button. It works without a connected device because it reads local logs; selecting a query source changes only this desktop view and preserves the provider chosen on the device.
+
+![Desktop AI Usage page showing model and context rows, token categories, and a combined CNY estimate](./images/device/ai-usage.png)
+
+*A real 1040×700 GUI test window with synthetic November 1 logs: two models, 420,000 total tokens, and row estimates of ¥0.2952 and ¥7.1280. The combined estimate is ¥7.42. This desktop example is independent of the home-screen examples and contains no personal usage.*
+
+When a session changes model, subsequent usage belongs to the new model. A model using both short and long context appears in separate rows. The desktop rows and the device total use the same calculation: normal input, cache reads, cache writes, and output each use their configured rate; exact `Decimal` amounts are added before the combined total is rounded once to CNY cents. Rows display four decimal places, so adding the displayed row values can differ slightly from the final total.
+
+For tiered models, context of **272,000 tokens or less** selects the short tier; larger values select the long tier. The reader prefers explicit `context_tokens`, then per-request input, then the input increment. The fallback is an approximation when the log does not expose actual billing context. Missing cache-write usage is treated as zero based on the fields available in the log.
+
+### Configured prices, visible uncertainty
+
+The amount uses the local `codex_prices.json`. The November 1 template covers eight GPT model identifiers using the user's confirmed **20% of the supplied standard-price examples**, while retaining the existing Claude rates. These are project configuration examples supplied by the user, not independently verified official prices or a universal discount. Rates and the default USD-to-CNY exchange rate of 7.20 remain editable; CNY-denominated custom prices are also supported. The upgrade fills missing model entries, preserves custom rates and exchange rates, and writes a dated migration backup. Full rates and accounting rules are in the [usage and pricing guide](https://github.com/mengqy2022/Esp32-touch/blob/main/docs/CODEX_USAGE_CN.md).
+
+If a model is unknown, required token detail or a consumed category's price is missing, or the price file is invalid, the model and token count remain visible but the complete amount is unavailable (`~¥--`). A missing cache-write price is not treated as free usage. The program does not present a known subtotal as the full bill, query an official billing endpoint, or show plan balance. Changing prices recalculates the retained day's estimate; historical price versions are not stored. The device remembers whether CODEX or CLAUDE is selected, while the host continues sending both independent caches.
 
 ## Windows companion: one dark control center
 
-The repository's published `ESP32TouchDashboard.exe` is version **2026.10.18.4**. It opens a dark control center with Device, PC SCREEN, AI Usage, and Settings/Logs pages. Choose automatic or manual COM selection, save the port, and click **Connect / Resume monitoring**. The GUI can be used directly; `--install` additionally creates a per-user installation, Start Menu entry, and login startup. With no device attached, the background process waits without opening a nonexistent port. When the CH340 device appears, it identifies the port and starts sending telemetry.
+The repository's published `ESP32TouchDashboard.exe` is version **2026.11.01.2**, paired with the November 1 full firmware package. It opens a dark control center with Device, PC SCREEN, AI Usage, and Settings/Logs pages. Choose automatic or manual COM selection, save the port, and click **Connect / Resume monitoring**. The GUI can be used directly; `--install` additionally creates a per-user installation, Start Menu entry, and login startup. With no device attached, the background process waits without opening a nonexistent port. When the CH340 device appears, it identifies the port and starts sending telemetry.
 
 The control center can enable or disable startup, pause or resume monitoring, check the COM link with `FILE:PING`, inspect CH340 driver state, open the price configuration, and view rotating logs. Pausing releases the serial port and the paused state survives the next login. If several identical USB-UART devices are connected, VID/PID alone cannot prove which one is the target, so the agent waits for a resolvable candidate instead of choosing randomly. Closing the GUI no longer stops background capture or leaves the system at `Switching window...`; the 2026.10.18.4 package gives the background process its own PyInstaller extraction lifecycle.
 
 For PC SCREEN, search windows by title or process, share one target, and open **SYSTEM → PC SCREEN** on the device. The GUI can switch targets without reopening the UART. A closed target must be selected again, and the host does not automatically redirect input to another application. Ordinary user permissions are recommended for both the target application and the Dashboard; elevated or GPU-rendered windows, minimized windows, and some Qt/OpenGL applications may still capture black frames or ignore input.
 
-The October 20 source tree has a locally built companion **2026.10.20.1** with Salary Cat calendar import, and the matching firmware has a local build and physical run record. The GitHub `dist/` downloads still contain the October 18 EXE and firmware package, so downloading them will not add Salary Cat. To use the new page, build the current source with the development guide and flash the matching firmware.
+The current downloads include model-cost details, device model-name synchronization, Salary Cat calendar import, weekend and makeup-workday cats, and the Friday color fix. Upgrade both the EXE and firmware for the complete interface. The portable EXE uses Windows `%TEMP%` for extraction rather than a developer-specific drive path. For an existing installation, pause monitoring, stop the old background process, and explicitly install the downloaded update with `ESP32TouchDashboard.exe --install`; simply opening a new EXE may reconnect to the already installed control center. Existing device settings and custom prices are retained under the documented upgrade process.
 
 Host sensors depend on Windows and its drivers. The current implementation mainly uses NVIDIA NVML for GPU data, and CPU temperature can be unavailable when the computer has no usable WMI provider. Those are sensor limits, not display failures.
 
@@ -253,26 +289,34 @@ idf.py build
 idf.py -p COM5 flash
 ```
 
-`COM5` is only an example. For Salary Cat, use the current firmware source and build the companion in a Python 3.11 x64 environment, following the [development guide](https://github.com/mengqy2022/Esp32-touch/blob/main/docs/DEVELOPMENT.md):
+`COM5` is only an example. Published packages are available for Windows x64 and the validated classic ESP32 board. Alternatively, build the companion in a Python 3.11 x64 environment, following the [development guide](https://github.com/mengqy2022/Esp32-touch/blob/main/docs/DEVELOPMENT.md):
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\build_exe.ps1
 ```
 
-| Available artifact as of October 20 | Version and feature coverage |
+| Available artifact as of November 1 | Version and feature coverage |
 | --- | --- |
-| [Current source and development guide](https://github.com/mengqy2022/Esp32-touch/blob/main/docs/DEVELOPMENT.md) | Includes Salary Cat; the engineering record uses a locally built companion 2026.10.20.1 and updated firmware |
-| [Published Windows EXE and firmware downloads](https://github.com/mengqy2022/Esp32-touch/tree/main/dist) | October 18 packages, EXE 2026.10.18.4; include PC SCREEN but do not include Salary Cat |
+| [Windows companion EXE](https://github.com/mengqy2022/Esp32-touch/raw/refs/heads/main/dist/ESP32TouchDashboard.exe) | 2026.11.01.2, Windows x64, about 13 MiB; includes model-cost details, name synchronization, and calendar import; no separate Python installation needed |
+| [Full-system firmware ZIP](https://github.com/mengqy2022/Esp32-touch/raw/refs/heads/main/dist/ESP32Touch-PC-SCREEN-firmware.zip) | November 1 classic ESP32 firmware; includes PC SCREEN, device model names, all eight Salary Cat animations, and the Friday fix |
+| [Source and development guide](https://github.com/mengqy2022/Esp32-touch/blob/main/docs/DEVELOPMENT.md) | Build and test the current firmware and companion yourself |
+
+Check downloads against the published [SHA-256 file](https://github.com/mengqy2022/Esp32-touch/blob/main/dist/SHA256SUMS.txt). The firmware ZIP contains the bootloader, partition table, application, flash arguments, and internal checksums. Follow its [flashing guide](https://github.com/mengqy2022/Esp32-touch/blob/main/dist/PC_SCREEN_FIRMWARE_CN.md) using the actual COM port. With the supplied matching layout, flashing the listed segments preserves NVS settings; avoid a whole-chip erase. This package targets the validated ESP32-D0WD-V3 with 4 MB flash, ILI9341, and XPT2046, and cannot be used directly on an ESP32-S3.
 
 The engineering repository contains the [Salary Cat guide](https://github.com/mengqy2022/Esp32-touch/blob/main/docs/SALARY_CAT_CN.md), [home-screen guide](https://github.com/mengqy2022/Esp32-touch/blob/main/docs/HOME_DASHBOARD_CN.md), complete [Chinese README](https://github.com/mengqy2022/Esp32-touch/blob/main/README_CN.md), [hardware notes](https://github.com/mengqy2022/Esp32-touch/blob/main/docs/HARDWARE.md), [architecture notes](https://github.com/mengqy2022/Esp32-touch/blob/main/docs/ARCHITECTURE.md), [serial protocol](https://github.com/mengqy2022/Esp32-touch/blob/main/docs/PROTOCOL.md), and [validation record](https://github.com/mengqy2022/Esp32-touch/blob/main/docs/VALIDATION.md). The packaged release also includes a [complete PC SCREEN firmware guide](https://github.com/mengqy2022/Esp32-touch/blob/main/dist/PC_SCREEN_FIRMWARE_CN.md).
 
 ## Validation and limits
 
-The October 20 engineering record reports a 1,784,144-byte firmware image, leaving about 43% of its 3 MiB application partition free on a 4 MB ESP32-D0WD-V3. It also records 52 explicit noninteractive host tests passing, strict C salary calculation tests, calendar and bounds checks, decoding of all 66 animation frames, Chinese glyph coverage, and a local 2026.10.20.1 companion self-test.
+The [engineering validation record](https://github.com/mengqy2022/Esp32-touch/blob/main/docs/VALIDATION.md) separates software checks, device communication, and visual acceptance. For the November 1 model-name release, it reports:
 
-In the recorded device checks, five page enter/exit cycles returned to the same free-heap value of 39,640 bytes, calendar synchronization and invalid-calendar rejection passed, and the animation decode counter advanced during both work and night conditions. Those observations support the specific code paths exercised; they do not establish long-term memory stability or visually smooth animation. The screenshots independently demonstrate the rendered layout and sample values. The source [validation record](https://github.com/mengqy2022/Esp32-touch/blob/main/docs/VALIDATION.md) distinguishes these checks from the remaining physical acceptance work.
+- **57 noninteractive host tests passed**, covering model attribution, provider isolation, context boundaries, price migration, and model-message validation. Actual LVGL home-page rendering checks cover name scrolling, provider switching, and stale/date/empty placeholders.
+- **Firmware built and flashed**, with a 1,883,952-byte application and about 40% of the 3 MiB application partition free. Application write hashes and independent readback matched; NVS was preserved.
+- **15 device serial checks passed**, including independent usage/name caches, invalid and oversized name rejection, cross-day hiding, selection preservation, and rejection of stale data reuse after restart. The real model list read back from the device matched the local logs.
+- **Published packages checked**, with a 13,627,603-byte portable EXE and 1,110,374-byte firmware ZIP. The three bundled firmware binaries matched the verified build, and CRC and SHA-256 checks passed. The EXE's dedicated test window passed capture, click, drag, and scroll checks, including its minimized-window case; this does not establish compatibility with every application.
 
-Physical finger-by-finger settings acceptance, restart persistence, subjective animation smoothness, every page over 24 hours, reboot/hot-plug/multiple-device behavior, and a real Claude billing comparison remain open. Some minimized, elevated, or GPU-rendered Windows applications may still capture black frames or ignore input. The five game engines pass logic checks but still need per-game physical touch and visual acceptance.
+Salary Cat has separate dated evidence. The device owner confirmed normal display and continuous playback on October 21. Weekend selection and personal/calendar overrides were checked in native C and LVGL previews; the October 30 Friday fix was checked across the complete animation cycle, built, flashed, and read back. Earlier five-cycle page enter/exit checks returned to the same free-heap value, but do not establish long-term memory stability.
+
+The November 1 home-screen layout and October 30 Friday fix have not received fresh physical-screen visual acceptance. Full touch-settings acceptance, Salary Cat restart persistence, every page over 24 hours, PC reboot/hot-plug/multiple-device behavior, and comparison against official billing remain open. Some minimized, elevated, or GPU-rendered Windows applications may still capture black frames or ignore input. The five game engines pass logic checks but still need per-game physical touch and visual acceptance. Screenshots and serial readback demonstrate their stated paths, not every aspect of the finished device.
 
 This makes the device useful today while leaving its limits visible. The project covers a complete path from hardware interfaces, touch calibration, LVGL screens, and FreeRTOS tasks to Windows collection and a serial protocol, without presenting unmeasured laboratory results as product specifications.
 
