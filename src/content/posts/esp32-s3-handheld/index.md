@@ -1,8 +1,8 @@
 ---
 title: "ESP32-S3 Handheld: Custom Hardware and the Xiaomeng MZ System"
 published: 2026-10-13
-updated: 2026-10-15
-description: "From a custom two-layer PCB to v1.1-MZ: an ESP32-S3 handheld with a six-app LVGL interface, Chinese ebooks, music, NES, time tools, eight built-in games, and new prototype photos."
+updated: 2026-11-01
+description: "An ESP32-S3 handheld with custom hardware and the Xiaomeng Mizhi System: Chinese ebooks, music, NES, background countdowns, a 25/5-minute focus timer, and nine built-in games including Sokoban."
 image: "./real-home.jpg"
 tags: ["ESP32-S3", "Embedded Systems", "Game Console", "PCB Design", "LVGL"]
 category: Hardware
@@ -12,30 +12,30 @@ lang: en
 
 This project brings a custom circuit, a two-layer PCB, a handheld enclosure, and an ESP-IDF application together in one portable device. At its center is an **ESP32-S3-WROOM-1-N16R8**, driving a 320×240 color display, physical controls, microSD storage, speaker output, and wireless services.
 
-The software is **小孟蜜汁系统 (Xiaomeng Mizhi System)**. Its current **v1.1-MZ** interface opens six applications from a single home screen: ebooks, music, NES, time tools, built-in games, and system settings. It can serve as a reader, a music player, a small game console, and a platform for learning how an embedded system shares limited memory and peripherals.
+The software is **小孟蜜汁系统 (Xiaomeng Mizhi System)**. Its current **v1.2-focus** release opens six applications from a single home screen: ebooks, music, NES, time tools, built-in games, and system settings. It can serve as a reader, a music player, a small game console, and a platform for learning how an embedded system shares limited memory and peripherals.
 
 ![The finished handheld showing the six-app Xiaomeng home screen](./real-home.jpg)
 
-The new prototype photos show the six-tile launcher on the physical display, Chinese text rendering, the music playback page, and two NES titles. The black enclosure places the directional control on the left and action buttons on the right, with four menu buttons above the screen and the status LED visible below the directional control.
+The prototype photos show the six-tile launcher on the physical display, Chinese text rendering, the music playback page, and two NES titles. These earlier photos document the assembled hardware and the applications shown; the latest timer and Sokoban screens appear separately below. The black enclosure places the directional control on the left and action buttons on the right, with four menu buttons above the screen and the status LED visible below the directional control.
 
-This article documents v1.1-moss alongside the circuit and PCB that support it. The editable hardware is available as a JLCPCB EDA project, and the firmware is maintained in the [ESP32-S3-XMMZ repository](https://github.com/mengqy2022/ESP32-S3-XMMZ).
+This article follows the [November 1, 2026 firmware update](https://github.com/mengqy2022/ESP32-S3-XMMZ/commit/05a2b2e7d79d2fdaeae0adda6766c2ddf9018c19), alongside the circuit and PCB that support it. The editable hardware is available as a JLCPCB EDA project, and the firmware is maintained in the [ESP32-S3-XMMZ repository](https://github.com/mengqy2022/ESP32-S3-XMMZ).
 
 ## What the device can do
 
-The v1.1-MZ project records **ESP-IDF 5.5.4**, **LVGL 9.5.0**, and **esp_lvgl_port 2.9.0** in its dependency lock file. Its six home-screen entries lead to the following functions:
+The current project records **ESP-IDF 5.5.4**, **LVGL 9.5.0**, and **esp_lvgl_port 2.9.0** in its dependency lock file. Its six home-screen entries lead to the following functions:
 
 | Application | Current behavior |
 |---|---|
 | Ebooks | TXT reading with UTF-8, UTF-8 BOM, UTF-16 LE/BE, and common GBK/GB2312 text; per-book reading position |
 | Music | SD-card MP3 and PCM16 WAV playback; pause, track switching, volume control, and automatic next-track playback |
 | NES | ROM selection from the SD card and emulation through the nofrendo core |
-| Time tools | Stopwatch with lap capture and a countdown with six presets and an audible completion reminder |
-| Games | Eight built-in games, with shared pause/restart controls and separate saved high scores |
+| Time tools | Stopwatch with lap capture, background countdowns with six presets, and a 25/5-minute focus timer with cross-page reminders |
+| Games | Nine built-in games, including eight-level Sokoban; control guides and saved high scores or level-clear records |
 | System settings | Wi-Fi, BLE, WS2812B lighting, system information, and button testing |
 
 The firmware also provides serial file-transfer commands through the CH340 bridge, allowing a compatible PC client to read and write SD-card files without removing the card. The maintenance tool in `tools/device_check.py` can request device status, inject button actions, and capture LCD refresh data for testing.
 
-Compared with the earlier firmware, v1.1-moss adds time tools and expands the built-in game collection from five to eight. **The gallery and wallpaper screensaver have been removed.** An idle home screen now stays visible; old image files can remain on the SD card, but the current system does not browse or rotate them.
+The latest update adds background timing, a focus/rest cycle, Sokoban, and game instructions with visible records. The gallery and wallpaper screensaver remain absent: an idle home screen stays visible, and old image files can remain on the SD card without being browsed or rotated by the current system.
 
 ## Hardware platform
 
@@ -173,11 +173,11 @@ The firmware uses the panel labels KEY1–KEY6 and SW2 in its on-screen instruct
 
 SW2 retains the logical name `KEY_BOOT` in the source. It is a normal shortcut after startup, but holding GPIO0 during reset still affects ROM bootloader entry. The direction switch contributes four directional contacts; its center contact is not connected in the schematic.
 
-## The Moss interface on a 320×240 screen
+## The Xiaomeng interface on a 320×240 screen
 
-The current theme uses a deep moss background (`0x101B1C`), layered cards, warm white text, and a mint focus color (`0xC5F3D3`). Monochrome 24-pixel line icons identify the six applications. A 120 ms fade introduces pages, while a bright outline and a slightly lighter card make the selected tile visible without a large animation.
+The interface uses a dark green background (`0x101B1C`), layered cards, warm white text, and a mint focus color (`0xC5F3D3`). Monochrome 24-pixel line icons identify the six applications. A 120 ms fade introduces pages, while a bright outline and a slightly lighter card make the selected tile visible without a large animation.
 
-Direction keys follow the launcher's 3×2 geometry, and returning from an application preserves the selected position. The top bar shows the clock, Wi-Fi state, and estimated battery percentage; the application area also reports SD-card readiness. The clock shows an unsynchronized state until network time is available. Volume and lighting shortcuts appear briefly as small notices instead of opening another settings screen.
+Direction keys follow the launcher's 3×2 geometry, and returning from an application preserves the selected position. The top bar shows the clock, Wi-Fi state, and estimated battery percentage; the application area also reports SD-card readiness. The clock shows an unsynchronized state until network time is available. Volume and lighting shortcuts appear briefly as small notices instead of opening another settings screen. With a background countdown or focus session active, the home-screen footer also shows its remaining time.
 
 The photographs show the real LCD through a camera, so its apparent cyan tint and brightness are different from the theme's source color values. The battery percentage shown in the home photo is also a firmware estimate, subject to the divider calibration discussed in the power section.
 
@@ -201,15 +201,23 @@ Left and Right change tracks, KEY4 pauses or resumes, and KEY5/KEY6 changes volu
 
 The supported local formats are **MP3 and PCM signed 16-bit little-endian WAV**, with mono or stereo WAV input. MP4/M4A files are not supported by this player. The bar in the photo represents volume; the current page does not present an estimated playback-progress bar. Its labels update when playback state or volume changes, avoiding needless periodic redraws.
 
-### Time tools
+### Background countdowns and a focus timer
 
-Time tools provide an offline stopwatch with lap capture and a countdown with **10-second, 1-minute, 5-minute, 10-minute, 25-minute, and 45-minute** presets. Left/Right switches modes, KEY4 starts or pauses, and KEY5 resets. KEY6 records a lap while the stopwatch runs; when the countdown is paused, Up/Down or KEY6 selects a preset.
+Time tools now have three tabs: stopwatch, countdown, and focus timer. Left/Right changes tabs, KEY4 starts or pauses, and KEY5 resets. The stopwatch retains lap capture on KEY6 and pauses when switching tabs or leaving the page. The countdown retains **10-second, 1-minute, 5-minute, 10-minute, 25-minute, and 45-minute** presets, selected with Up/Down or KEY6 while paused.
 
-At completion, the countdown displays a message and requests a three-note sound three times, roughly one second apart. Any button stops the remaining reminders and also performs its normal action. Sound follows system volume and mute settings. **Switching mode or leaving time tools pauses the timer**; it does not keep counting in the background while another application runs. State is retained within the current boot session.
+**Countdowns and focus sessions continue after leaving the page.** The home screen shows the remaining time, and completion can display a notification while reading or using another regular application. The focus timer uses **25 minutes of focus and 5 minutes of rest**, counts completed focus sessions, and waits for KEY4 in time tools before starting the rest phase or the next focus session. It does not automatically advance through unattended cycles.
 
-### Eight built-in games
+Countdown and focus modes share one background timer. Browsing another tab leaves it running; starting or resetting the other timer mode replaces it, with an on-screen warning. The timer and focus-session count are held for the current boot only and do not survive power-off or restart; resetting the focus timer clears its session count.
 
-The built-in game hall is separate from NES and needs no external ROM for these eight games:
+At completion, the service requests a three-note reminder up to three times, roughly one second apart. Any button dismisses further reminders and also performs its normal action. During music playback, the decoder task inserts the reminder at an audio-block boundary and then restores the music's sample rate; paused music stays paused. Sound follows system volume and mute settings. **NES defers the notification until the ROM exits**, when the service checks the actual elapsed time, because the emulator owns the display and audio while running.
+
+![Device LCD captures showing background timing, the focus timer, a reading reminder, and Sokoban instructions and completion](./focus-device.png)
+
+These captures come from the firmware repository's current device-verification record. They show the home-screen timer, a running focus session, a reminder over the reader, and the Sokoban guide, board, and completion screen. They are LCD captures transferred over serial with CRC32 verification, rather than additional camera photographs.
+
+### Nine built-in games
+
+The built-in game hall is separate from NES and needs no external ROM for these nine games:
 
 | Game | Gameplay and current additions |
 |---|---|
@@ -221,8 +229,11 @@ The built-in game hall is separate from NES and needs no external ROM for these 
 | 2048 | Directional tile merging, with invalid moves leaving the board unchanged |
 | Pong | A computer opponent and a first-to-seven match |
 | Obstacle Runner | Buffered jumps, variable jump height, and increasing difficulty |
+| Sokoban | Eight progressively unlocked levels, undo for up to 128 moves, and saved level-clear progress |
 
-KEY2 or KEY4 pauses and resumes a built-in game. After a game ends, KEY4 restarts, KEY3 returns to the game hall, and KEY1 returns home. Each game's high score is stored independently in NVS and written when a new record is reached. The shared runtime advances game logic in fixed 33 ms steps; that timing is a logic interval, not a measured display frame rate.
+The game hall now displays each game's high score or cleared-level count. KEY2 opens a guide with the objective, controls, and record; KEY4 starts directly from either the list or guide. Within a game, KEY2 or KEY4 pauses and resumes, KEY3 returns to the game hall, and KEY1 returns home. After a game ends, KEY4 restarts; in Sokoban it advances to the next level after a clear. Records are stored independently in NVS, with the original games' record keys preserved. The shared runtime advances game logic in fixed 33 ms steps; that timing is a logic interval, not a measured display frame rate.
+
+In Sokoban, use the direction keys to move and push boxes onto every goal. Boxes can be pushed but not pulled. KEY5 undoes up to the most recent 128 moves, and KEY6 restarts the current board. Clearing a level unlocks the next, and the cleared-level count survives a restart. The current board, move count, and undo history are discarded on exit. The first level is available initially; the level picker lets the player revisit unlocked levels.
 
 ### NES on the physical prototype
 
@@ -262,7 +273,7 @@ The complete device software is available here:
 
 **[ESP32-S3-XMMZ on GitHub](https://github.com/mengqy2022/ESP32-S3-XMMZ)**
 
-The repository contains the ESP-IDF application, LVGL integration, display and audio drivers, button handling, SD-card services, Wi-Fi and BLE services, the NES core, eight built-in games, the time tool, maintenance scripts, and example storage data. It is released under the MIT License. The Helix MP3 decoder and NES emulator include their own third-party license files, which should be preserved when redistributing the firmware.
+The repository contains the ESP-IDF application, LVGL integration, display and audio drivers, button handling, SD-card services, Wi-Fi and BLE services, the NES core, nine built-in games, background time tools, maintenance scripts, and example storage data. It is released under the MIT License. The Helix MP3 decoder and NES emulator include their own third-party license files, which should be preserved when redistributing the firmware.
 
 ## Firmware architecture and memory budget
 
@@ -273,9 +284,9 @@ Startup proceeds from NVS initialization to hardware self-test, LVGL setup, wire
 | `main/app_main.c` | Startup, hardware initialization, and creation of the UI task |
 | `main/board_config.h` | Target protection, pin assignments, and board constants |
 | `main/apps/` | Launcher, ebooks, music, NES browser, time tools, settings, and shared UI |
-| `main/apps/games/` | Eight games, shared runtime, and 2048 rules |
+| `main/apps/games/` | Nine games, shared runtime, and separate 2048 and Sokoban rules |
 | `main/drivers/` | ST7789, buttons, SD card, I2S audio, battery ADC, and status LED |
-| `main/services/` | Music decoding, Wi-Fi, BLE, lighting state, and serial maintenance |
+| `main/services/` | Music decoding, background timing, Wi-Fi, BLE, lighting state, and serial maintenance |
 | `main/nes/` | Emulator integration and nofrendo core |
 | `tools/` | Font/asset generation, repository checks, and device maintenance |
 
@@ -286,11 +297,13 @@ The 8 MB PSRAM helps with books, catalogs, and emulation, but some work still re
 - **Reuse and release:** the book and music lists reuse five visible rows, the game hall uses four, and transitions delete the previous LVGL screen tree. Music catalog data and large decoder/emulator stacks prefer PSRAM where supported.
 - **Incremental work:** books stream through a 4 KB buffer with a page index; the home clock label changes only when the displayed minute changes; playback labels change with player state. These choices limit object counts and unnecessary redraws.
 
+The background timer uses a monotonic clock rather than network wall time. `main/services/focus_clock.c` handles deadlines, pause/resume, and phase transitions independently of LVGL or ESP-IDF; `time_tools.c` displays notifications through the existing UI loop and LVGL top layer, without adding a background thread. Music reminders use the decoder's existing ownership of I2S, and NES suspends notification delivery until it returns. Sokoban likewise separates board rules from drawing and reuses the shared game runtime for input, pausing, and records.
+
 This architecture is documented in [`docs/DESIGN.md`](https://github.com/mengqy2022/ESP32-S3-XMMZ/blob/main/docs/DESIGN.md) and the current implementation in [`main/lvgl_port.c`](https://github.com/mengqy2022/ESP32-S3-XMMZ/blob/main/main/lvgl_port.c). Its value is in how it allocates scarce internal memory; it is not a substitute for measuring frame rate on the assembled device.
 
 ## Building and flashing the firmware
 
-The project targets ESP32-S3 only. The supplied dependency lock records ESP-IDF 5.5.4, LVGL 9.5.0, and esp_lvgl_port 2.9.0. After installing ESP-IDF and opening its development environment, obtain the source:
+The project targets ESP32-S3 only. The current dependency lock records ESP-IDF 5.5.4, LVGL 9.5.0, and esp_lvgl_port 2.9.0. After installing ESP-IDF and opening its development environment, obtain the source:
 
 ```bash
 git clone https://github.com/mengqy2022/ESP32-S3-XMMZ.git
@@ -313,7 +326,7 @@ idf.py -p COM7 flash monitor
 
 If the build reports classic-ESP32 toolchain errors or missing ESP32-S3 GPIO definitions, clear the old target configuration and select `esp32s3` again. The repository README contains the complete recovery procedure and the dependency information required by ESP-IDF Component Manager.
 
-Component Manager restores managed dependencies from `main/idf_component.yml` and `dependencies.lock`. Generated font and icon C files are already included, so an ordinary build does not require regenerating those assets. The supplied source archive contains no prebuilt firmware binary; building produces the files used for flashing.
+Component Manager restores managed dependencies from `main/idf_component.yml` and `dependencies.lock`. Generated font and icon C files are already included, so an ordinary build does not require regenerating those assets. The repository publishes source without prebuilt firmware binaries; building produces the files used for flashing.
 
 ## SD card layout
 
@@ -326,24 +339,32 @@ The three content directories used by the current applications are:
 └── games/       # .nes ROM files
 ```
 
-`/sdcard` is the firmware's mount point; on the card itself, place `books`, `music`, and `games` at the root. Use a FAT32 card. Long file names and UTF-8 file names are enabled, so Chinese book and game names can be used directly. JPG files from older versions can remain on the card, but there is no gallery or wallpaper application in v1.1-moss.
+`/sdcard` is the firmware's mount point; on the card itself, place `books`, `music`, and `games` at the root. Use a FAT32 card. Long file names and UTF-8 file names are enabled, so Chinese book and game names can be used directly. JPG files from older versions can remain on the card, but the current firmware has no gallery or wallpaper application.
 
 ![The handheld enclosure with the display off, from the earlier build](./display-off.jpg)
 
-## Validation recorded with v1.1-moss
+## Validation recorded with v1.2-focus
 
-The supplied [`Moss release notes`](https://github.com/mengqy2022/ESP32-S3-XMMZ/blob/main/docs/MOSS_RELEASE.md) record build and device checks for this version. They report two rounds of entering, operating, pausing, and leaving all eight built-in games; SD ebook reading; MP3 playback with repeated track changes; Wi-Fi scan-page re-entry; stopwatch and countdown checks; repeated time-tool transitions; two NES launches and long-press exits; and a 45-second idle check that kept the home screen visible. The notes also record a 2048 rules test, including 40,000 randomized moves checking sum conservation.
+The [current release notes](https://github.com/mengqy2022/ESP32-S3-XMMZ/blob/main/docs/FOCUS_RELEASE.md) record ESP-IDF 5.5.4 compilation, flashing with write verification, and a device response reporting `v1.2-focus` on November 1, 2026. These are the firmware project's test records; the scope is summarized here so readers can assess what was checked.
 
-Those are project validation records, while the five new photographs directly show the launcher, reader, music page, and two NES screens. They do not establish measured battery runtime, display frame rate, speaker loudness, or long-term wireless stability. The release notes describe earlier JPEG-stack and coexistence-related failures, the removal of image paths, stack adjustments, and a change to hardware Wi-Fi/BLE arbitration with modem sleep disabled. The resulting networking power use and long-term concurrent behavior still need observation.
+| Area | Recorded checks |
+|---|---|
+| Timing and reminders | Stopwatch and 10-second countdown controls; background notification while reading; reminders during playing and paused music; deferred notification after leaving NES |
+| Focus timer | 25/5-minute configuration, start, home-screen remaining time, page re-entry, and reset; phase transitions covered by native clock tests |
+| Sokoban | Guide, level selection, movement, undo, restart, a first-level clear, second-level entry, and unlocked progress retained after reboot |
+| Application cycles | Two rounds through all nine games, 20 time-tool visits, two NES runs, ebook reading, repeated track changes, and Wi-Fi/BLE operations |
+| Rules and lifecycle | Native clock tests including five focus/rest cycles; all eight Sokoban levels solved and checked for undo and blocking rules; a 45-second idle check keeping the home screen visible |
+
+The project did **not** wait through a complete 25-minute focus and 5-minute rest cycle on the physical device; those phase boundaries were exercised in native C tests. The device checks also do not measure speaker loudness or distortion, output sample-rate accuracy, display frame rate, battery runtime, or long-term wireless stability. The repository retains hardware Wi-Fi/BLE arbitration and disables Wi-Fi modem sleep as a workaround for earlier observed instability, so networking power use and long-duration behavior still need measurement.
 
 ## Design notes and possible next steps
 
-The project now documents the circuit, two-layer PCB, connector placement, v1.1-moss firmware, and physical prototype together. The next practical checks are to reconcile the battery-divider constant with the assembled resistor values, verify the LCD rail under load, confirm the SD chip-select mapping, and record the installed battery specification. The schematic also notes that USB1 uses LCSC part C49261586 and that connector height matters when choosing a replacement.
+The project now documents the circuit, two-layer PCB, connector placement, current Xiaomeng Mizhi firmware, and physical prototype together. The next practical checks are to reconcile the battery-divider constant with the assembled resistor values, verify the LCD rail under load, confirm the SD chip-select mapping, and record the installed battery specification. The schematic also notes that USB1 uses LCSC part C49261586 and that connector height matters when choosing a replacement.
 
-Further development could add a front-panel pinout illustration, measured battery-life and frame-rate results, and a versioned release package with a reproducible firmware binary. Keeping those records alongside the source would make it easier to relate a photo, a PCB revision, and an exact firmware build. The [user guide](https://github.com/mengqy2022/ESP32-S3-XMMZ/blob/main/docs/USER_GUIDE.md) and [Moss release notes](https://github.com/mengqy2022/ESP32-S3-XMMZ/blob/main/docs/MOSS_RELEASE.md) provide more detailed operation and validation information.
+Further development could add a front-panel pinout illustration, measured battery-life and frame-rate results, and a versioned release package with a reproducible firmware binary. Keeping those records alongside the source would make it easier to relate a photo, a PCB revision, and an exact firmware build. The [user guide](https://github.com/mengqy2022/ESP32-S3-XMMZ/blob/main/docs/USER_GUIDE.md) and [current release notes](https://github.com/mengqy2022/ESP32-S3-XMMZ/blob/main/docs/FOCUS_RELEASE.md) provide more detailed operation and validation information.
 
 ## Conclusion
 
-This ESP32-S3 handheld is more than a game console. Its current Moss system combines a six-app LVGL interface, Chinese ebook rendering, local audio, NES emulation, eight small games, time tools, wireless setup, and hardware diagnostics on a custom portable board. The public firmware, JLCPCB project, and new real-device photos make the design inspectable while leaving clear next steps for battery calibration, enclosure refinement, and longer-term performance measurements.
+The Xiaomeng Mizhi System brings Chinese ebook rendering, local audio, NES emulation, nine built-in games, background countdowns, a focus timer, wireless setup, and hardware diagnostics to a custom ESP32-S3 handheld. The public firmware, JLCPCB project, prototype photos, and current LCD captures document how the hardware and software work together, with battery calibration and longer-term performance measurements still available as practical next steps.
 
 ::github{repo="mengqy2022/ESP32-S3-XMMZ"}
