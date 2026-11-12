@@ -96,3 +96,4 @@ Please read the license before redistributing the program. LightOffice 0.7.2.0 a
 That distinction matters when linking to the project: the public GitHub repository is an open product-information and release repository, while the current complete source checkout is maintained separately. It should not be described as a fully open-source release unless the applicable license is changed for that material.
 
 If you want a small Windows workbench that follows the selected file instead of forcing every task into one large application, try the [LightOffice downloads](https://github.com/mengqy2022/LightOffice-Public/releases) and share feedback through the project's [issue tracker](https://github.com/mengqy2022/LightOffice-Public/issues).
+::github{repo="mengqy2022/LightOffice-Public"}
