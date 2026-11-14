@@ -1,4 +1,5 @@
 ---
+
 title: "Embedded Hardware Design: Reusable Rules for AI-Assisted Schematics and PCBs"
 published: 2026-11-14
 description: "A portable hardware design skill that connects schematic readability, PCB layout and routing, per-pin power review, and revision-specific evidence, with practical installation steps and clear verification boundaries."
@@ -19,14 +20,14 @@ The project is available in the [embedded-hardware-design-skill repository](http
 
 The repository is organized around design work rather than one large prompt. `SKILL.md` identifies the entry point and tells the agent which references to read for the current task. The detailed rules live under `references/`, reusable project records live under `assets/`, and Python helpers live under `scripts/`.
 
-| Design activity | What the rules ask the designer to establish |
-| --- | --- |
-| New board or electrical change | Measurable requirements, interface contracts, calculations, risks, and acceptance evidence |
-| Schematic work | Clear functional blocks, accurate symbols and pin mappings, readable labels, and controlled connectivity |
-| PCB placement | Mechanical constraints, assembly space, connector access, sensitive channels, and power-loop feasibility |
-| Power and ground | Per-pin supply requirements, suitable capacitors, and the complete supply and return paths |
-| Routing and finishing | Reference continuity, interface-specific constraints, ground completion, DRC, and manufacturing checks |
-| Delivery | Current revision identity, review coverage, evidence files, and explicit unresolved items |
+| Design activity                | What the rules ask the designer to establish                                                             |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------- |
+| New board or electrical change | Measurable requirements, interface contracts, calculations, risks, and acceptance evidence               |
+| Schematic work                 | Clear functional blocks, accurate symbols and pin mappings, readable labels, and controlled connectivity |
+| PCB placement                  | Mechanical constraints, assembly space, connector access, sensitive channels, and power-loop feasibility |
+| Power and ground               | Per-pin supply requirements, suitable capacitors, and the complete supply and return paths               |
+| Routing and finishing          | Reference continuity, interface-specific constraints, ground completion, DRC, and manufacturing checks   |
+| Delivery                       | Current revision identity, review coverage, evidence files, and explicit unresolved items                |
 
 The intended scope is common low-voltage embedded hardware. High-voltage, isolation, DDR, and RF designs need their own accurate device and system guidance. Values such as trace width, impedance, capacitance, and clearance come from the actual project, components, stackup, and manufacturing process.
 
@@ -93,12 +94,12 @@ The [source register](https://github.com/mengqy2022/embedded-hardware-design-ski
 
 The current source adds several practical refinements that remain outside the v2.4.1 release attachments:
 
-| Rule | Current source guidance | Applicability |
-| --- | --- | --- |
-| PCB-V02 | Use Arial for PCB silkscreen and visible component text; size characters and strokes for the available space and process; clear holes and mask openings; prefer readable placement away from same-side trace projections. | The font and placement preference are workspace defaults. Manufacturing readability and clearance still need checking. |
-| PCB-V04 | Keep independent same-net solder lands separate and connect them with compliant copper. | Review physical assembly geometry, including same-net objects; distinguish independent pads from a manufacturer's compound physical land. |
-| PCB-P09 | Choose four-layer usage from the actual differential routing layer and return path. Bottom-layer differential routing preferably has a continuous adjacent inner GND reference. | This depends on the board's real stackup and channel. It provides no fixed impedance guarantee. |
-| PCB-P10 | Prefer rectangular or simple orthogonal power regions on native inner plane layers, with documented regular subdivisions for necessary mechanical clearances. | Check clearance, minimum copper width, connectivity, return paths, and the exported Gerbers. |
+| Rule    | Current source guidance                                                                                                                                                                                                   | Applicability                                                                                                                             |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| PCB-V02 | Use Arial for PCB silkscreen and visible component text; size characters and strokes for the available space and process; clear holes and mask openings; prefer readable placement away from same-side trace projections. | The font and placement preference are workspace defaults. Manufacturing readability and clearance still need checking.                    |
+| PCB-V04 | Keep independent same-net solder lands separate and connect them with compliant copper.                                                                                                                                   | Review physical assembly geometry, including same-net objects; distinguish independent pads from a manufacturer's compound physical land. |
+| PCB-P09 | Choose four-layer usage from the actual differential routing layer and return path. Bottom-layer differential routing preferably has a continuous adjacent inner GND reference.                                           | This depends on the board's real stackup and channel. It provides no fixed impedance guarantee.                                           |
+| PCB-P10 | Prefer rectangular or simple orthogonal power regions on native inner plane layers, with documented regular subdivisions for necessary mechanical clearances.                                                             | Check clearance, minimum copper width, connectivity, return paths, and the exported Gerbers.                                              |
 
 These changes came from documented design review and user feedback. Their presence in the rule set does not upgrade an earlier board's validation status.
 
