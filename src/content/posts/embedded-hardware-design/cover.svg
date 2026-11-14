@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="400" viewBox="0 0 1280 400" role="img" aria-labelledby="title desc">
+  <title id="title">Embedded Hardware Design</title>
+  <desc id="desc">Portable schematic and PCB design rules. Schematic. Layout. Routing. Evidence.</desc>
+  <defs>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#b8fff2" opacity=".09"/></pattern>
+  </defs>
+  <rect width="1280" height="400" rx="20" fill="#0b1727"/>
+  <rect width="1280" height="400" rx="20" fill="url(#grid)"/>
+  <g fill="none" stroke="#2dd4bf" stroke-width="3" stroke-linejoin="round">
+    <path d="M868 90h72l34 34h62m-168 0h48l34 34h86m-168 0h20l34 34h114" opacity=".65"/>
+    <path d="M1168 256h-72l-34-34h-26m132 68h-96l-34-34h-2m132 68h-120l-34-34h-82" opacity=".65"/>
+    <path d="M1048 82v38m32-38v38m32-38v38m-64 120v38m32-38v38m32-38v38" opacity=".45"/>
+    <rect x="1000" y="120" width="160" height="120" rx="12" fill="#102634"/>
+    <rect x="1020" y="140" width="120" height="80" rx="6" stroke-opacity=".25"/>
+  </g>
+  <g fill="#5eead4"><circle cx="868" cy="90" r="5"/><circle cx="868" cy="124" r="5"/><circle cx="868" cy="158" r="5"/><circle cx="1168" cy="256" r="5"/><circle cx="1168" cy="290" r="5"/><circle cx="1168" cy="324" r="5"/></g>
+  <g font-family="sans-serif">
+    <text x="64" y="93" font-size="15" font-weight="600" letter-spacing="4" fill="#5eead4">OPEN DESIGN KNOWLEDGE</text>
+    <text x="60" y="170" font-size="52" font-weight="700" fill="#f1f5f9">Embedded Hardware</text>
+    <text x="60" y="232" font-size="52" font-weight="700" fill="#f1f5f9">Design</text>
+    <text x="64" y="288" font-size="23" fill="#b9cbd6">Schematic. Layout. Routing. Evidence.</text>
+    <text x="64" y="349" font-size="14" letter-spacing="2" fill="#7b9eae">PORTABLE RULES / SOURCE-BACKED REVIEWS</text>
+    <text x="1080" y="189" text-anchor="middle" font-size="25" font-weight="700" fill="#5eead4">EHD</text>
+  </g>
+</svg>
