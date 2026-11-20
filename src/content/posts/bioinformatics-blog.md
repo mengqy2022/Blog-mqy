@@ -1,7 +1,7 @@
 ---
 title: "My Bioinformatics Blog"
 published: 2026-09-20
-updated: 2026-10-17
+updated: 2026-11-20
 description: "An introduction to my earlier Jekyll blog with practical notes on comparative genomics, annotation, phylogenetics, and visualization."
 image: "./bioinformatics-blog.jpg"
 tags: ["Bioinformatics", "Blogging"]

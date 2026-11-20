@@ -20,8 +20,8 @@ lang: en
 ---
 ```
 
-- `title`, `published`, `description`, `image`, `tags`, `category`, `draft`, and `lang` use this order. Put `updated` after `published` only when the article has a real revision date.
-- Use an ISO date (`YYYY-MM-DD`) for dates. Preserve original publication dates when editing an existing article. Change `updated` only for a substantive revision, not formatting-only cleanup.
+- Keep `updated` immediately after `published` on every article. Use the date of the latest editorial or content update.
+- Use an ISO date (`YYYY-MM-DD`) for dates and preserve original publication dates when editing an existing article.
 - Quote the title and description with YAML double quotes. Escape embedded double quotes as `\"`.
 - Use `image: ""` when there is no cover. Store article images beside the article and use a `./filename.ext` path. A root-relative path is for files in `public/`.
 - Use a YAML list of quoted strings for tags. Reuse established category names and write `category: ""` when uncategorized.

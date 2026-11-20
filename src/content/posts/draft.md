@@ -1,6 +1,7 @@
 ---
 title: "Draft Example"
 published: 2022-07-01
+updated: 2026-11-20
 description: "A private example showing how draft posts are kept out of the production site."
 image: ""
 tags: ["Markdown", "Blogging", "Demo"]

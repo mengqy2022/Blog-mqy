@@ -46,6 +46,7 @@ const title = args[0].replace(/\\/g, "\\\\").replace(/"/g, '\\"');
 const content = `---
 title: "${title}"
 published: ${getDate()}
+updated: ${getDate()}
 description: ""
 image: ""
 tags: []

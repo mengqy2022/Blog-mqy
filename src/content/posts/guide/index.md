@@ -1,6 +1,7 @@
 ---
 title: "Simple Guides for Fuwari"
 published: 2024-04-01
+updated: 2026-11-20
 description: "A practical guide to creating posts and organizing content in this Astro blog."
 image: "./cover.jpeg"
 tags: ["Fuwari", "Blogging", "Customization"]
@@ -19,6 +20,7 @@ This blog template is built with [Astro](https://astro.build/). For the things t
 ---
 title: "My First Blog Post"
 published: 2023-09-09
+updated: 2026-11-20
 description: "This is the first post of my new Astro blog."
 image: "./cover.jpg"
 tags: ["Foo", "Bar"]

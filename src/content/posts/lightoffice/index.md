@@ -1,7 +1,7 @@
 ---
 title: "LightOffice: A File-Centered Windows Workbench for Everyday Tasks"
 published: 2026-11-12
-updated: 2026-11-16
+updated: 2026-11-20
 description: "LightOffice is a lightweight Windows desktop toolbox for image, PDF, screenshot, archive, file, and CSV workflows, with local processing and optional external engines."
 image: "./hero.png"
 tags: ["Windows", "C#", "WPF", "Productivity", "Desktop Software"]

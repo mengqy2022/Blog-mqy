@@ -1,7 +1,7 @@
 ---
 title: "Markdown Extended Features"
 published: 2024-05-01
-updated: 2024-11-29
+updated: 2026-11-20
 description: "A reference for GitHub cards, admonitions, spoilers, and other extended Markdown features."
 image: ""
 tags: ["Demo", "Example", "Markdown", "Fuwari"]

@@ -1,7 +1,7 @@
 ---
 title: "ESP32-S3 Handheld: Custom Hardware and the Xiaomeng MZ System"
 published: 2026-10-13
-updated: 2026-11-01
+updated: 2026-11-20
 description: "An ESP32-S3 handheld with custom hardware and the Xiaomeng Mizhi System: Chinese ebooks, music, NES, background countdowns, a 25/5-minute focus timer, and nine built-in games including Sokoban."
 image: "./real-home.jpg"
 tags: ["ESP32-S3", "Embedded Systems", "Game Console", "PCB Design", "LVGL"]

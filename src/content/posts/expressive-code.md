@@ -1,6 +1,7 @@
 ---
 title: "Expressive Code Example"
 published: 2024-04-10
+updated: 2026-11-20
 description: "A reference for syntax highlighting, frames, markers, wrapping, collapsible sections, and line numbers."
 image: ""
 tags: ["Markdown", "Blogging", "Demo"]

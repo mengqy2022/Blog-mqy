@@ -1,6 +1,7 @@
 ---
 title: "Component Inventory"
 published: 2026-09-20
+updated: 2026-11-20
 description: "An interactive inventory for searching, filtering, sorting, editing, uploading, and exporting electronic component data."
 image: ""
 tags: ["Inventory", "Electronics", "Tools"]

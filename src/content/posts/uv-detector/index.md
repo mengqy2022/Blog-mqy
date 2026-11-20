@@ -1,6 +1,7 @@
 ---
 title: "UV Detector Board: Pure Hardware Circuit Design and PCB Engineering"
 published: 2026-10-03
+updated: 2026-11-20
 description: "A project overview of a compact analog UV detector, covering its circuit concept, PCB layout, and prototype."
 image: "./pcb_mau.jpg"
 tags: ["PCB Design", "JLCEDA", "UV Detection"]

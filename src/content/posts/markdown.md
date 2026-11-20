@@ -1,6 +1,7 @@
 ---
 title: "Markdown Example"
 published: 2023-10-01
+updated: 2026-11-20
 description: "A reference article demonstrating the Markdown syntax supported by this blog."
 image: ""
 tags: ["Markdown", "Blogging", "Demo"]

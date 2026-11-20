@@ -1,6 +1,7 @@
 ---
 title: "Include Video in Posts"
 published: 2023-08-01
+updated: 2026-11-20
 description: "A short example of embedding YouTube and Bilibili videos in a post."
 image: ""
 tags: ["Example", "Video"]
