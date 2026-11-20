@@ -1,13 +1,23 @@
 ---
-title: Markdown Example
+title: "Markdown Example"
 published: 2023-10-01
-description: A simple example of a Markdown blog post.
-tags: [Markdown, Blogging, Demo]
-category: Examples
+description: "A reference article demonstrating the Markdown syntax supported by this blog."
+image: ""
+tags: ["Markdown", "Blogging", "Demo"]
+category: "Examples"
 draft: false
+lang: en
 ---
 
+## Heading levels
+
+The post title comes from frontmatter. Use `##` for the first body section, then increase the heading level for nested sections. The following examples show heading syntax without adding another top-level heading to this article:
+
+```markdown
 # An h1 header
+## An h2 header
+### An h3 header
+```
 
 Paragraphs are separated by a blank line.
 
@@ -31,7 +41,7 @@ Use 3 dashes for an em-dash. Use 2 dashes for ranges (ex., "it's all
 in chapters 12--14"). Three dots ... will be converted to an ellipsis.
 Unicode is supported. ☺
 
-## An h2 header
+### An h3 header
 
 Here's a numbered list:
 
@@ -66,7 +76,7 @@ for i in range(10):
     print i
 ```
 
-### An h3 header
+### Nested lists
 
 Now a nested list:
 
@@ -100,60 +110,19 @@ doc](#an-h2-header). Here's a footnote [^1].
 
 [^1]: Footnote text goes here.
 
-Tables can look like this:
+Tables use a header row and a separator row:
 
-size material color
-
----
-
-9 leather brown
-10 hemp canvas natural
-11 glass transparent
-
-Table: Shoes, their sizes, and what they're made of
-
-(The above is the caption for the table.) Pandoc also supports
-multi-line tables:
-
----
-
-keyword text
-
----
-
-red Sunsets, apples, and
-other red or reddish
-things.
-
-green Leaves, grass, frogs
-and other things it's
-not easy being.
-
----
+| Size | Material | Color |
+| --- | --- | --- |
+| 9 | Leather | Brown |
+| 10 | Hemp canvas | Natural |
+| 11 | Glass | Transparent |
 
 A horizontal rule follows.
 
 ---
 
-Here's a definition list:
-
-apples
-: Good for making applesauce.
-oranges
-: Citrus!
-tomatoes
-: There's no "e" in tomatoe.
-
-Again, text is indented 4 spaces. (Put a blank line between each
-term/definition pair to spread things out more.)
-
-Here's a "line block":
-
-| Line one
-| Line too
-| Line tree
-
-and images can be specified like so:
+Images use descriptive alternative text and a path relative to this post:
 
 [//]: # (![example image]&#40;./demo-banner.png "An exemplary image"&#41;)
 

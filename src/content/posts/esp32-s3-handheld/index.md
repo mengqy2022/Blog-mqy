@@ -5,7 +5,7 @@ updated: 2026-11-01
 description: "An ESP32-S3 handheld with custom hardware and the Xiaomeng Mizhi System: Chinese ebooks, music, NES, background countdowns, a 25/5-minute focus timer, and nine built-in games including Sokoban."
 image: "./real-home.jpg"
 tags: ["ESP32-S3", "Embedded Systems", "Game Console", "PCB Design", "LVGL"]
-category: Hardware
+category: "Hardware"
 draft: false
 lang: en
 ---

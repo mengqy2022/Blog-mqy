@@ -5,7 +5,7 @@ updated: 2026-11-16
 description: "LightOffice is a lightweight Windows desktop toolbox for image, PDF, screenshot, archive, file, and CSV workflows, with local processing and optional external engines."
 image: "./hero.png"
 tags: ["Windows", "C#", "WPF", "Productivity", "Desktop Software"]
-category: Tools
+category: "Tools"
 draft: false
 lang: en
 ---

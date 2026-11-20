@@ -6,7 +6,7 @@ updated: 2026-11-20
 description: "BoardCraft, formerly embedded-hardware-design, brings evidence-backed rule selection, independent PCB review gates, and illustrated LED and GD32E230 examples to AI-assisted hardware design. Updated for version 3.0.1."
 image: "./cover.svg"
 tags: ["Embedded Systems", "PCB Design", "Schematic", "AI", "Codex", "Open Source"]
-category: Hardware
+category: "Hardware"
 draft: false
 lang: en
 ---

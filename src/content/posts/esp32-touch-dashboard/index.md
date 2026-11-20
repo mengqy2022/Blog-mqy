@@ -5,7 +5,7 @@ updated: 2026-11-01
 description: "An illustrated engineering log for a 320×240 ESP32 touch terminal: PC telemetry, daily model names and cost breakdowns for Codex and Claude Code, selected-window streaming, and Salary Cat with work calendars and eight animated cats."
 image: "./front-monitor.jpg"
 tags: ["ESP32", "LVGL", "Embedded Systems", "Touch UI", "PC Monitor", "PC Screen"]
-category: Hardware
+category: "Hardware"
 draft: false
 lang: en
 ---

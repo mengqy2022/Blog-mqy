@@ -1,16 +1,15 @@
 ---
-title: UV Detector Board - Pure Hardware Circuit Design and PCB Engineering
+title: "UV Detector Board: Pure Hardware Circuit Design and PCB Engineering"
 published: 2026-10-03
-description: Complete engineering documentation of a compact UV detector board based on analog hardware circuits, including schematic analysis, PCB layout, and prototype design.
+description: "A project overview of a compact analog UV detector, covering its circuit concept, PCB layout, and prototype."
 image: "./pcb_mau.jpg"
 tags: ["PCB Design", "JLCEDA", "UV Detection"]
-category: Hardware
+category: "Hardware"
 draft: false
+lang: en
 ---
 
-# UV Detector Board: A Pure Hardware UV Detection System
-
-## 1. Project Introduction
+## Project Overview
 
 This project is a compact ultraviolet (UV) intensity detection board designed with a **pure hardware architecture**.
 
@@ -22,7 +21,7 @@ The system does not rely on:
 
 The complete detection process is implemented through analog electronic circuits:
 
-```
+```text
 UV Radiation
       ↓
 UV Sensor
@@ -40,19 +39,17 @@ The circuit and PCB were designed using **JLCEDA**.
 
 Official website:
 
-https://lceda.cn/
+The project was designed in [JLCEDA](https://lceda.cn/).
 
----
+## Hardware Functions
 
-# 2. Hardware Functions
-
-## 2.1 UV Intensity Detection
+### UV Intensity Detection
 
 The UV sensor converts ultraviolet radiation into an electrical signal.
 
 According to the schematic design, the photodiode output current is related to UV intensity:
 
-```
+```text
 I(nA) = 21 × UV + 83
 ```
 
@@ -64,31 +61,27 @@ Vout = 0.143 × UV + 0.564 V
 
 This voltage is processed by the analog circuit and used for UV level classification.
 
----
-
-## 2.2 UV Level Indication
+### UV Level Indication
 
 The board provides multiple LED indicators.
 
 The threshold design is:
 
-| UV Level | Voltage Range | Indicator |
-|---|---|---|
-| UV 0-2 | <0.85 V | Green LED |
-| UV 3-5 | <1.279 V | Yellow LED |
-| UV 6-7 | <1.565 V | Blue LED |
-| UV 8-10 | <1.994 V | Red LED |
-| UV ≥11 | >2.137 V | High-level indication |
+| UV level | Voltage threshold | Indicator |
+| --- | ---: | --- |
+| 0–2 | < 0.85 V | Green LED |
+| 3–5 | < 1.279 V | Yellow LED |
+| 6–7 | < 1.565 V | Blue LED |
+| 8–10 | < 1.994 V | Red LED |
+| 11 and above | > 2.137 V | High-level indication |
 
 The user can directly identify UV intensity through LED color changes.
 
----
+## Circuit Design
 
-# 3. Circuit Design Analysis
+### Power Supply Circuit
 
-## 3.1 Power Supply Circuit
-
-![Schematic](./schematic.png)
+![Schematic of the UV detector power supply](./schematic.png)
 
 The power module contains:
 
@@ -103,9 +96,7 @@ Main functions:
 - Reduce battery consumption;
 - Improve circuit reliability.
 
----
-
-## 3.2 UV Signal Acquisition Circuit
+### UV Signal Acquisition Circuit
 
 The UV sensing stage consists of:
 
@@ -117,7 +108,7 @@ The weak sensor current signal is converted into a stable voltage signal.
 
 Signal processing:
 
-```
+```text
 UV Sensor Current
         ↓
 Operational Amplifier
@@ -127,9 +118,7 @@ Voltage Signal
 Comparator Input
 ```
 
----
-
-## 3.3 Analog Amplification and Comparison
+### Analog Amplification and Comparison
 
 The circuit uses LMV358 operational amplifiers.
 
@@ -141,13 +130,11 @@ Functions:
 
 Different comparison thresholds correspond to different UV levels.
 
----
+## PCB Design
 
-# 4. PCB Design
+### PCB Top Layout
 
-## 4.1 PCB Top Layout
-
-![PCB Top](./pcb_top_layout.png)
+![Top-layer layout of the circular UV detector PCB](./pcb_top_layout.png)
 
 The PCB adopts a circular structure.
 
@@ -161,17 +148,15 @@ Advantages:
 Functional areas:
 
 | Region | Function |
-|---|---|
-| Left area | Power supply and battery circuit |
-| Center area | Analog processing circuit |
-| Outer area | UV indicator LEDs |
-| Bottom interface | Pin header and expansion |
+| --- | --- |
+| Left | Power supply and battery circuit |
+| Center | Analog processing circuit |
+| Outer edge | UV indicator LEDs |
+| Bottom | Pin header and expansion |
 
----
+### PCB Bottom Layer
 
-## 4.2 PCB Bottom Layer
-
-![PCB Bottom](./pcb_bottom_layer.png)
+![Bottom-layer routing of the UV detector PCB](./pcb_bottom_layer.png)
 
 The bottom layer mainly provides:
 
@@ -181,11 +166,9 @@ The bottom layer mainly provides:
 
 The layout separates sensitive analog signals from power circuits to reduce interference.
 
----
+## Prototype
 
-# 5. Prototype Design
-
-![PCB Prototype](./pcb_3d_layout.png)
+![Three-dimensional view of the UV detector PCB](./pcb_3d_layout.png)
 
 The final PCB design integrates:
 
@@ -196,13 +179,7 @@ The final PCB design integrates:
 
 The physical prototype also includes external pin-header connections for testing and modification.
 
----
-
-# 6. Engineering Platform
-
-This project was developed with:
-
-## JLCEDA
+## Design Tool
 
 JLCEDA is an online EDA platform supporting:
 
@@ -211,13 +188,9 @@ JLCEDA is an online EDA platform supporting:
 - Component management;
 - Manufacturing preparation.
 
-Website:
+The schematics and PCB were developed with [JLCEDA](https://lceda.cn/), an online EDA platform for schematic capture, PCB layout, component management, and manufacturing preparation.
 
-https://lceda.cn/
-
----
-
-# 7. Summary
+## Summary
 
 This UV detector board demonstrates a complete analog hardware sensing system.
 

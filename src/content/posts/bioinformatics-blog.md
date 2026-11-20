@@ -1,12 +1,13 @@
 ---
-title: My Bioinformatics Blog
+title: "My Bioinformatics Blog"
 published: 2026-09-20
 updated: 2026-10-17
-description: A short introduction to my earlier bioinformatics blog built with Jekyll on GitHub Pages — "Give Me Some Passion!" — which collects 17 practical notes on comparative genomics, KEGG/GO annotation, phylogenetics and more.
-image: './bioinformatics-blog.jpg'
-tags: [Bioinformatics, Blogging]
-category: Bioinformatics
+description: "An introduction to my earlier Jekyll blog with practical notes on comparative genomics, annotation, phylogenetics, and visualization."
+image: "./bioinformatics-blog.jpg"
+tags: ["Bioinformatics", "Blogging"]
+category: "Bioinformatics"
 draft: false
+lang: en
 ---
 
 ## Introduction

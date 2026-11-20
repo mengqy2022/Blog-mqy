@@ -1,11 +1,12 @@
 ---
-title: Component Inventory
+title: "Component Inventory"
 published: 2026-09-20
-description: An interactive inventory of electronic components I have purchased — search, filter, sort, adjust quantities, upload a new file, and download the data as CSV.
-image: ''
-tags: [Inventory, Electronics, Tools]
-category: Tools
+description: "An interactive inventory for searching, filtering, sorting, editing, uploading, and exporting electronic component data."
+image: ""
+tags: ["Inventory", "Electronics", "Tools"]
+category: "Tools"
 draft: false
+lang: en
 ---
 
 This page is an **interactive inventory** of the electronic components I have on
